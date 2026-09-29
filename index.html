@@ -15,6 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="Hilos">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600&family=Hanken+Grotesk:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -137,7 +138,10 @@ button{font:inherit;color:inherit}
 .cabeza p{max-width:40ch;color:var(--ink-2)}
 
 /* Colección */
+.filtros-barra{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdr));z-index:30;background:var(--bg);padding:14px 0;margin:0 calc(var(--pad)*-1) 0;padding-left:var(--pad);padding-right:var(--pad);display:flex;flex-direction:column;gap:10px;border-bottom:1px solid transparent;transition:border-color .3s}
+.filtros-barra.pegada{border-color:var(--line)}
 .filtros{display:flex;gap:8px;flex-wrap:wrap}
+#filtros-talla .chip{min-height:36px;padding:0 16px;font-size:.8125rem}
 .chip{min-height:44px;padding:0 20px;border-radius:999px;border:1px solid var(--line);background:transparent;cursor:pointer;font-size:.9rem;transition:background .3s,color .3s,border-color .3s}
 .chip:hover{border-color:var(--ink)}
 .chip[aria-pressed="true"]{background:#000;color:#C1825F;border-color:#000}
@@ -332,6 +336,14 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 .tostada.ver{transform:translate(-50%,0);visibility:visible}
 .tostada button{min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(193,130,95,.5);background:none;color:#C1825F;cursor:pointer;font-weight:600;white-space:nowrap}
 
+.pwa-aviso{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:75;transform:translate(-50%,calc(100% + 90px));visibility:hidden;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;grid-template-columns:36px 1fr;grid-template-areas:"img texto" "acciones acciones";column-gap:12px;row-gap:14px;box-shadow:0 18px 40px rgba(0,0,0,.18);transition:transform .5s var(--ease);font-size:.8125rem;width:min(360px,calc(100% - 32px))}
+.pwa-aviso.ver{transform:translate(-50%,0);visibility:visible}
+.pwa-aviso img{grid-area:img;border-radius:10px;align-self:start}
+.pwa-aviso p{grid-area:texto;margin:0;color:var(--ink-2);line-height:1.4}
+.pwa-aviso strong{color:var(--head);font-weight:600}
+.pwa-acciones{grid-area:acciones;display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.pwa-aviso .icono{width:34px;height:34px}
+
 /* Entrada de la portada */
 .intro .linea>span{animation:alzar 1.1s var(--ease) both;animation-delay:calc(.12s * var(--d,0) + .15s)}
 .intro .aparece{animation:fundir 1.2s var(--ease) both;animation-delay:calc(.12s * var(--d,0) + .2s)}
@@ -430,11 +442,14 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
         <h2 id="t-coleccion">La colección</h2>
         <p>Cinco prendas, cinco lugares. Elige el color del hilo y tu talla; nosotros la tejemos desde el primer punto.</p>
       </div>
-      <div class="filtros revela" role="group" aria-label="Filtrar prendas">
-        <button class="chip" data-f="todo" aria-pressed="true">Todo</button>
-        <button class="chip" data-f="abrigos" aria-pressed="false">Abrigos</button>
-        <button class="chip" data-f="accesorios" aria-pressed="false">Accesorios</button>
-        <button class="chip" data-f="tops" aria-pressed="false">Tops</button>
+      <div class="filtros-barra">
+        <div class="filtros revela" role="group" aria-label="Filtrar por categoría">
+          <button class="chip" data-f="todo" aria-pressed="true">Todo</button>
+          <button class="chip" data-f="abrigos" aria-pressed="false">Abrigos</button>
+          <button class="chip" data-f="accesorios" aria-pressed="false">Accesorios</button>
+          <button class="chip" data-f="tops" aria-pressed="false">Tops</button>
+        </div>
+        <div class="filtros revela" role="group" aria-label="Filtrar por talla" id="filtros-talla"></div>
       </div>
       <div class="rejilla" id="rejilla"></div>
     </div>
@@ -494,9 +509,9 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
   <section class="envoltura" id="encargo" aria-labelledby="t-encargo">
     <div class="encargo revela">
       <svg class="hebra-deco" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true"><path d="M-20 420 C200 300 260 520 480 380 S760 120 900 260 S1120 420 1240 120" fill="none" stroke="#C1825F" stroke-width="1.5"/></svg>
-      <span class="guion" style="font-size:2.2rem;color:#C1825F">A tu medida</span>
+      <span class="guion" style="font-size:2.2rem">A tu medida</span>
       <h2 id="t-encargo" style="margin-top:16px">¿Tienes una prenda en mente? La tejemos contigo</h2>
-      <p>Cuéntanos la idea, el color y la talla. Te respondemos con el tiempo de tejido y el precio.</p>
+      <p>Cuéntanos la idea, el color y la talla. Solemos responder en minutos, y ahí mismo te contamos el tiempo de tejido y el precio.</p>
       <div class="acciones">
         <a class="btn iman" id="wa-medida" href="#" target="_blank" rel="noopener">Contar mi idea por WhatsApp</a>
         <a class="btn btn-borde" href="https://www.instagram.com/hilos.nata/" target="_blank" rel="noopener">Ver @hilos.nata</a>
@@ -564,12 +579,21 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
   <ul class="b-lista" id="b-lista"></ul>
   <div class="b-pie" id="b-pie">
     <div class="b-total"><span>Subtotal</span><span id="b-total"></span></div>
-    <p class="b-nota">El envío y el pago los coordinamos por WhatsApp.</p>
+    <p class="b-nota">Solemos responder en minutos. Ahí mismo coordinamos el pago y el envío.</p>
     <a class="btn btn-ancho" id="b-finalizar" href="#" target="_blank" rel="noopener">Finalizar pedido por WhatsApp</a>
   </div>
 </dialog>
 
 <div class="tostada" id="tostada" role="status" aria-live="polite"><span id="tostada-txt">Añadido a tu bolsa</span><button id="tostada-ver">Ver bolsa</button></div>
+
+<div class="pwa-aviso" id="pwa-aviso" role="status">
+  <img src="assets/logo-icono.png" alt="" width="36" height="36">
+  <p></p>
+  <div class="pwa-acciones">
+    <button class="btn btn-pequeno" id="pwa-instalar">Instalar</button>
+    <button class="icono" id="pwa-cerrar" aria-label="Cerrar aviso"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -747,7 +771,7 @@ $('#tostada-ver').addEventListener('click',()=>{ $('#tostada').classList.remove(
 const rejilla=$('#rejilla');
 const colorTarjeta={};
 rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
-  <article class="tarjeta revela" data-cat="${p.cat}" style="transition-delay:${(i%3)*.08}s">
+  <article class="tarjeta revela" data-cat="${p.cat}" data-tallas="${p.tallas.join(' ')}" style="transition-delay:${(i%3)*.08}s">
     <button class="tarjeta-media" data-abrir="${i}" aria-label="Ver ${p.nombre}">
       ${p.etiqueta?`<span class="etiqueta">${p.etiqueta}</span>`:''}
       <span class="sombra"></span>
@@ -784,11 +808,36 @@ if(finoPuntero&&!reduce){
     m.querySelector('.gira').style.transform=''; m.querySelector('.sombra').style.transform='';
   });
 }
-$$('.chip').forEach(c=>c.addEventListener('click',()=>{
-  const f=c.dataset.f;
-  $$('.chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
-  $$('.tarjeta').forEach(t=>{ const ok=f==='todo'||t.dataset.cat===f||t.dataset.cat==='todo-medida'; t.classList.toggle('fuera',!ok); });
-}));
+const ORDEN_TALLA=['XS','S','M','L','XL','Única'];
+const tallas=[...new Set(PRENDAS.flatMap(p=>p.tallas))].sort((a,b)=>{
+  const ia=ORDEN_TALLA.indexOf(a), ib=ORDEN_TALLA.indexOf(b);
+  return (ia<0?99:ia)-(ib<0?99:ib);
+});
+$('#filtros-talla').innerHTML=`<button class="chip" data-t="todas" aria-pressed="true">Todas las tallas</button>`
+  +tallas.map(t=>`<button class="chip" data-t="${t}" aria-pressed="false">${t}</button>`).join('');
+let filtroCat='todo', filtroTalla='todas';
+function aplicarFiltros(){
+  $$('.tarjeta').forEach(t=>{
+    if(t.dataset.cat==='todo-medida'){ t.classList.remove('fuera'); return; }
+    const okCat=filtroCat==='todo'||t.dataset.cat===filtroCat;
+    const okTalla=filtroTalla==='todas'||t.dataset.tallas.split(' ').includes(filtroTalla);
+    t.classList.toggle('fuera',!(okCat&&okTalla));
+  });
+}
+$('.filtros[aria-label="Filtrar por categoría"]').addEventListener('click',e=>{
+  const c=e.target.closest('.chip'); if(!c) return;
+  filtroCat=c.dataset.f;
+  $$('.filtros[aria-label="Filtrar por categoría"] .chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
+  aplicarFiltros();
+});
+$('#filtros-talla').addEventListener('click',e=>{
+  const c=e.target.closest('.chip'); if(!c) return;
+  filtroTalla=c.dataset.t;
+  $$('#filtros-talla .chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
+  aplicarFiltros();
+});
+new IntersectionObserver(([e])=>{ $('.filtros-barra').classList.toggle('pegada',!e.isIntersecting); },{threshold:1})
+  .observe($('#t-coleccion'));
 
 /* ---------- Ficha de producto ---------- */
 const dlgP=$('#producto'), pEsc=$('#p-escenario'), pGiro=$('#p-giro'), pPrenda=$('#p-prenda'), lupa=$('#p-lupa');
@@ -1149,6 +1198,37 @@ function crearOvillo(){
     renderer.render(scene,cam);
   }};
 }
+
+/* ---------- Instalar como app ---------- */
+(function(){
+  const CLAVE='hilos-pwa-cerrado', aviso=$('#pwa-aviso'); if(!aviso) return;
+  const yaInstalada=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  if(yaInstalada) return;
+  let cerrado=false; try{cerrado=localStorage.getItem(CLAVE)==='1';}catch(e){}
+  if(cerrado) return;
+
+  let prompt=null;
+  function mostrar(texto,conBoton){
+    aviso.querySelector('p').innerHTML=texto;
+    $('#pwa-instalar').style.display=conBoton?'':'none';
+    setTimeout(()=>aviso.classList.add('ver'),1400);
+  }
+  function ocultar(){ aviso.classList.remove('ver'); try{localStorage.setItem(CLAVE,'1');}catch(e){} }
+
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault(); prompt=e;
+    mostrar('Llévate <strong>Hilos</strong> contigo: instálala en tu celular en un toque.',true);
+  });
+  $('#pwa-instalar').addEventListener('click',async()=>{
+    if(!prompt) return; prompt.prompt(); await prompt.userChoice; prompt=null; ocultar();
+  });
+  $('#pwa-cerrar').addEventListener('click',ocultar);
+  window.addEventListener('appinstalled',ocultar);
+
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    mostrar('Agrega <strong>Hilos</strong> a tu pantalla de inicio: toca compartir <span aria-hidden="true">⬆️</span> y luego «Agregar a inicio».',false);
+  }
+})();
 })();
 
 if('serviceWorker' in navigator){
