@@ -1302,7 +1302,14 @@ function crearOvillo(){
 })();
 
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+  window.addEventListener('load',async()=>{
+    const reg=await navigator.serviceWorker.register('sw.js');
+    reg.update();
+    let recargado=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(recargado) return; recargado=true; location.reload();
+    });
+  });
 }
 </script>
 </body>

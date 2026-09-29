@@ -1,4 +1,4 @@
-const CACHE = 'hilos-v1';
+const CACHE = 'hilos-v2';
 const ASSETS = ['/', '/index.html', '/manifest.json', '/assets/icon-192.png', '/assets/icon-512.png'];
 
 self.addEventListener('install', e => {

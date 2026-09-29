@@ -1,8 +1,8 @@
 /assets/*
-  Cache-Control: public, max-age=604800, must-revalidate
+  Cache-Control: no-cache
 
 /manifest.json
-  Cache-Control: public, max-age=604800, must-revalidate
+  Cache-Control: no-cache
 
 /sw.js
   Cache-Control: no-cache
