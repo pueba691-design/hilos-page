@@ -648,7 +648,7 @@ const wa=t=>`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t)}`;
 if(matchMedia('(display-mode: standalone)').matches){
   const splash=$('#splash');
   const listo=new Promise(res=>{ if(document.readyState==='complete') res(); else addEventListener('load',res,{once:true}); });
-  Promise.all([listo,new Promise(res=>setTimeout(res,reduce?0:900))]).then(()=>{
+  Promise.all([listo,new Promise(res=>setTimeout(res,reduce?0:2400))]).then(()=>{
     splash.classList.add('oculto');
     setTimeout(()=>splash.remove(),reduce?0:650);
   });
