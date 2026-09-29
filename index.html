@@ -7,7 +7,12 @@
 <meta name="description" content="Prendas tejidas a mano en crochet, bajo pedido. Cada una guarda la historia del lugar que la inspiró.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" type="image/png" href="assets/logo-icono.png">
-<link rel="apple-touch-icon" href="assets/logo-icono.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Hilos">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600&family=Hanken+Grotesk:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
@@ -1130,6 +1135,9 @@ function crearOvillo(){
 }
 })();
 
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+}
 </script>
 </body>
 </html>
