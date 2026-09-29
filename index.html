@@ -801,6 +801,20 @@ function refrescarP(){
   $$('#p-tallas .talla').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===pTalla));
   $('#p-cant').textContent=pCant;
   $('#p-wa').href=wa(`Hola, Hilos. Quiero ${pCant>1?pCant+' unidades del':'el'} ${act.nombre} en color ${pColor}${pTalla?', talla '+pTalla:''}.`);
+  guardarBorrador();
+}
+/* Si sale de la página a medio elegir (ej. un mensaje de WhatsApp) y el navegador
+   recarga la pestaña al volver, esto restaura la prenda y la selección que tenía. */
+const BORRADOR='hilos-borrador';
+function guardarBorrador(){ try{sessionStorage.setItem(BORRADOR,JSON.stringify({id:act.id,color:pColor,talla:pTalla,cant:pCant}));}catch(e){} }
+function borrarBorrador(){ try{sessionStorage.removeItem(BORRADOR);}catch(e){} }
+function restaurarBorrador(){
+  let b; try{b=JSON.parse(sessionStorage.getItem(BORRADOR)||'null');}catch(e){b=null;}
+  if(!b) return;
+  const i=PRENDAS.findIndex(p=>p.id===b.id); if(i<0) return;
+  abrirProducto(i);
+  pColor=b.color||pColor; pTalla=b.talla||pTalla; pCant=b.cant||1;
+  refrescarP();
 }
 function abrirProducto(i){
   act=PRENDAS[i]; pColor=colorTarjeta[act.id]||act.color; pTalla=act.tallas.length===1?act.tallas[0]:null; pCant=1;
@@ -823,6 +837,8 @@ $('#p-agregar').addEventListener('click',()=>{
   if(!pTalla){ $('#p-talla-t').textContent='Elige una talla para continuar'; $('#p-tallas .talla')?.focus(); return; }
   agregar(act.id,pColor,pTalla,pCant); dlgP.close(); tostada(`${act.nombre} está en tu bolsa`);
 });
+dlgP.addEventListener('close',borrarBorrador);
+restaurarBorrador();
 function setCerca(v){cerca=v; pEsc.classList.toggle('cerca',v); lupa.setAttribute('aria-pressed',v); lupa.querySelector('span').textContent=v?'Ver completa':'Ver los puntos'; pGiro.style.transform=''; pPrenda.style.transformOrigin='50% 50%';}
 lupa.addEventListener('click',()=>setCerca(!cerca));
 pPrenda.addEventListener('click',()=>{ if(cerca) setCerca(false); });
