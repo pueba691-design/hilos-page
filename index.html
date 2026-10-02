@@ -245,7 +245,7 @@ button{font:inherit;color:inherit}
 .encargo svg.hebra-deco{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.35}
 
 /* Pie */
-.pie{padding-top:88px;padding-bottom:40px}
+.pie{padding-top:88px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 104px)}
 .pie-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
 .pie .marca{font-size:1.3rem;padding-left:0}
 .pie .marca img{width:22px;height:22px}
@@ -255,6 +255,8 @@ button{font:inherit;color:inherit}
 .pie li a{display:inline-flex;min-height:36px;align-items:center;text-decoration:none;color:var(--ink-2);font-size:.9375rem}
 .pie li a:hover{color:var(--accent)}
 .pie-base{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-2);font-size:.8125rem}
+.pie-base a{color:inherit;text-decoration:none}
+.pie-base a:hover{color:var(--accent);text-decoration:underline}
 @media (max-width:900px){.pie-grid{grid-template-columns:1fr 1fr}}
 
 /* Diálogos */
@@ -567,7 +569,7 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
       <div><h4>Ayuda</h4><ul><li><a href="#proceso">Cómo pedir</a></li><li><a href="#cuidado">Cuidado de las prendas</a></li><li><a href="#" id="wa-pie" target="_blank" rel="noopener">WhatsApp</a></li></ul></div>
       <div><h4>Síguenos</h4><ul><li><a href="https://www.instagram.com/hilos.nata/" target="_blank" rel="noopener">Instagram</a></li></ul></div>
     </div>
-    <div class="pie-base"><span>© 2026 Hilos, tejidos en crochet</span><span>Tejido a mano, punto a punto</span></div>
+    <div class="pie-base"><span>© 2026 Hilos, tejidos en crochet</span><span>Tejido a mano, punto a punto</span><span>Hecho por <a href="https://jormeliasoft.com" target="_blank" rel="noopener">Jormelia Soft</a></span></div>
   </div>
 </footer>
 
