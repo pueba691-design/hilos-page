@@ -166,11 +166,7 @@ button{font:inherit;color:inherit}
 .tarjeta-info{display:flex;justify-content:space-between;gap:16px;padding:18px 4px 0}
 .tarjeta-info h3{font-size:1.45rem;font-weight:400;color:var(--ink);letter-spacing:0}
 .tarjeta-info .precio{font-weight:500;white-space:nowrap}
-.tarjeta-sub{padding:4px 4px 0;color:var(--ink-2);font-size:.9rem}
-.puntos{display:flex;gap:2px;padding:10px 0 0}
-.punto{width:32px;height:32px;padding:6px;border-radius:50%;border:1px solid transparent;background:none;cursor:pointer}
-.punto span{display:block;width:100%;height:100%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(46,29,21,.2)}
-.punto[aria-pressed="true"]{border-color:var(--ink)}
+.tarjeta-sub{padding:4px 4px 0 4px;margin-bottom:4px;color:var(--ink-2);font-size:.9rem}
 .medida{border-radius:22px;background:var(--card);color:var(--ink);border:1px solid var(--line);padding:clamp(28px,3vw,44px);display:flex;flex-direction:column;justify-content:space-between;gap:28px;aspect-ratio:4/5}
 .medida h3{color:var(--head);font-size:clamp(2rem,3vw,2.7rem);font-weight:200}
 .medida p{color:var(--ink-2);max-width:30ch}
@@ -507,8 +503,10 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
         <div class="filtros revela" role="group" aria-label="Filtrar por categoría">
           <button class="chip" data-f="todo" aria-pressed="true">Todo</button>
           <button class="chip" data-f="abrigos" aria-pressed="false">Abrigos</button>
-          <button class="chip" data-f="accesorios" aria-pressed="false">Accesorios</button>
           <button class="chip" data-f="tops" aria-pressed="false">Tops</button>
+          <button class="chip" data-f="aretes" aria-pressed="false">Aretes</button>
+          <button class="chip" data-f="cabello" aria-pressed="false">Para el cabello</button>
+          <button class="chip" data-f="bolsos" aria-pressed="false">Bolsos</button>
         </div>
         <div class="filtros revela" role="group" aria-label="Filtrar por talla" id="filtros-talla"></div>
       </div>
@@ -696,7 +694,7 @@ const HILOS=[{n:'Tierra',c:'#A15A3C'},{n:'Caramelo',c:'#C1825F'},{n:'Arena',c:'#
 const colorDe=n=>(HILOS.find(h=>h.n===n)||HILOS[0]).c;
 const coloresDe=p=>(p.colores?p.colores.map(n=>HILOS.find(h=>h.n===n)).filter(Boolean):HILOS.slice(0,5));
 const PRENDAS=[
-  {id:'aretes-sunflower',cat:'accesorios',nombre:'Aretes Sunflower',precio:29990,color:'Amarillo',colores:['Amarillo','Café claro','Café oscuro'],tallas:['Única'],etiqueta:'Nuevo',
+  {id:'aretes-sunflower',cat:'aretes',nombre:'Aretes Sunflower',precio:29990,color:'Amarillo',colores:['Amarillo','Café claro','Café oscuro'],tallas:['Única'],etiqueta:'Nuevo',
    desc:'Aretes tejidos en forma de girasol, con gancho dorado.',
    cuento:'Sus pétalos amarillos y el centro café nacen de los campos de girasoles del Valle del Cauca, que se abren de cara al sol en todo su esplendor.',
    fotos:['assets/productos/aretes-sunflower-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
@@ -704,35 +702,35 @@ const PRENDAS=[
    desc:'Chaleco tejido en cuadros, con los tonos de la orquídea colombiana.',
    cuento:'Cada cuadro combina los morados, azules y turquesas de las orquídeas que crecen silvestres en los bosques de Colombia, la flor que lleva el nombre de nuestro país por el mundo.',
    fotos:['assets/productos/chaleco-orquidea-1.jpg'],horas:'Unas 18 horas de tejido a mano.',material:'Lana acrílica. Lavar a mano en agua fría y secar extendido.'},
-  {id:'canguro-margarita',cat:'accesorios',nombre:'Canguro Margarita',precio:89990,color:'Terracota',colores:['Terracota','Mostaza','Blanco'],tallas:['Única'],etiqueta:'Nuevo',
+  {id:'canguro-margarita',cat:'bolsos',nombre:'Canguro Margarita',precio:89990,color:'Terracota',colores:['Terracota','Mostaza','Blanco'],tallas:['Única'],etiqueta:'Nuevo',
    desc:'Riñonera tejida con flores margarita, correa ajustable.',
    cuento:'Sus flores blancas repiten las margaritas que crecen entre el pasto en cualquier parque, y su forma está pensada para llevar el celular, las llaves y los audífonos sin pensarlo dos veces.',
    fotos:['assets/productos/canguro-margarita-1.jpg'],horas:'Unas 10 horas de tejido a mano.',material:'Algodón mercerizado. Limpiar con paño húmedo.'},
-  {id:'canguro-suspiro-lana',cat:'accesorios',nombre:'Canguro Suspiro de Lana',precio:89990,color:'Beige',colores:['Beige'],tallas:['Única'],
+  {id:'canguro-suspiro-lana',cat:'bolsos',nombre:'Canguro Suspiro de Lana',precio:89990,color:'Beige',colores:['Beige'],tallas:['Única'],
    desc:'Riñonera tejida que combina lo artesanal con lo moderno, ideal para el uso diario.',
    cuento:'Nació para acompañar el día a día sin pensarlo dos veces: liviana, cómoda y tejida con el mismo cuidado de una prenda especial, para que lo artesanal también quepa en lo cotidiano.',
    fotos:['assets/productos/canguro-suspiro-lana-1.jpg'],horas:'Unas 7 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
-  {id:'correa-flor-novia',cat:'accesorios',nombre:'Correa Flor de Novia',precio:39990,color:'Fucsia',colores:['Fucsia','Azul oscuro'],tallas:['Única'],
+  {id:'correa-flor-novia',cat:'bolsos',nombre:'Correa Flor de Novia',precio:39990,color:'Fucsia',colores:['Fucsia','Azul oscuro'],tallas:['Única'],
    desc:'Correa tejida para el celular, de 35 cm, compatible con Android y iPhone.',
    cuento:'Sus flores repiten el fucsia y el azul de la flor de novia, la que tradicionalmente lleva quien se casa — aquí tejida para que el celular también vaya contigo a donde sea, sin soltarse de la mano.',
    fotos:['assets/productos/correa-flor-novia-1.jpg','assets/productos/correa-flor-novia-2.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'manta-ramo-rosas',cat:'accesorios',nombre:'Manta Ramo de Rosas',precio:179990,color:'Rosado',colores:['Rosado','Fucsia','Vino tinto','Crudo','Verde militar'],tallas:['Única'],
+  {id:'manta-ramo-rosas',cat:'bolsos',nombre:'Manta Ramo de Rosas',precio:179990,color:'Rosado',colores:['Rosado','Fucsia','Vino tinto','Crudo','Verde militar'],tallas:['Única'],
    desc:'Ramo de rosas tejidas a mano, ideal para regalar en un día especial.',
    cuento:'Un ramo que no se marchita: cada rosa se teje una por una, para regalar algo que dure mucho más que un día especial.',
    fotos:['assets/productos/manta-ramo-rosas-1.jpg'],horas:'Unas 12 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
-  {id:'bolso-colombiano',cat:'accesorios',nombre:'Bolso Colombiano',precio:129990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo','Blanco'],tallas:['Única'],
+  {id:'bolso-colombiano',cat:'bolsos',nombre:'Bolso Colombiano',precio:129990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo','Blanco'],tallas:['Única'],
    desc:'Bolso tejido en cuadros, con los colores de la bandera de Colombia.',
    cuento:'Sus cuadros en amarillo, azul y rojo llevan los colores de la bandera a todas partes, para cargar el orgullo por el país en cada salida.',
    fotos:['assets/productos/bolso-colombiano-1.jpg'],horas:'Unas 9 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
-  {id:'gorro-colombiano',cat:'accesorios',nombre:'Gorro Colombiano',precio:59990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['S'],
+  {id:'gorro-colombiano',cat:'cabello',nombre:'Gorro Colombiano',precio:59990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['S'],
    desc:'Gorro de ala ancha inspirado en los colores de la bandera de Colombia.',
    cuento:'Tejido con los colores de la bandera, para cubrirte del sol sin dejar de llevar a Colombia en la cabeza.',
    fotos:['assets/productos/gorro-colombiano-1.jpg'],horas:'Unas 5 horas de tejido a mano.',material:'Lana acrílica suave. Lavar a mano en agua fría.'},
-  {id:'panoleta-colombiana',cat:'accesorios',nombre:'Pañoleta Colombiana',precio:50000,color:'Rojo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['XS','S','M'],
+  {id:'panoleta-colombiana',cat:'cabello',nombre:'Pañoleta Colombiana',precio:50000,color:'Rojo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['XS','S','M'],
    desc:'Pañoleta versátil: en el cabello, en la cintura, de espaldar o al cuello.',
    cuento:'Una sola prenda, cuatro formas de llevarla — en el cabello, en la cintura, de espaldar o al cuello —, siempre con los colores que nos representan.',
    fotos:['assets/productos/panoleta-colombiana-1.jpg','assets/productos/panoleta-colombiana-2.jpg'],horas:'Unas 6 horas de tejido a mano.',material:'Algodón. Lavar a mano en agua fría.'},
-  {id:'balaca-colombiana',cat:'accesorios',nombre:'Balaca Colombiana',precio:59990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['Única'],
+  {id:'balaca-colombiana',cat:'cabello',nombre:'Balaca Colombiana',precio:59990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['Única'],
    desc:'Diadema tejida con los colores de la bandera de Colombia.',
    cuento:'Los colores de la bandera, tejidos para llevar el outfit a otro nivel sin decir una palabra.',
    fotos:['assets/productos/balaca-colombiana-1.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Lana acrílica suave. Lavar a mano en agua fría.'},
@@ -744,11 +742,11 @@ const PRENDAS=[
    desc:'Top tejido en tonos lila y morado, inspirado en el guayacán rosado.',
    cuento:'Los lilas y morados de esta prenda vienen del guayacán rosado, el árbol que en ciertas épocas del año cubre de violeta los paisajes del Valle del Cauca.',
    fotos:['assets/productos/top-guayacan-violeta-1.jpg'],horas:'Unas 16 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano en agua fría y secar extendido.'},
-  {id:'aretes-colombianos',cat:'accesorios',nombre:'Aretes Colombianos',precio:39990,color:'Azul oscuro',colores:['Azul oscuro','Rojo','Amarillo'],tallas:['Única'],
+  {id:'aretes-colombianos',cat:'aretes',nombre:'Aretes Colombianos',precio:39990,color:'Azul oscuro',colores:['Azul oscuro','Rojo','Amarillo'],tallas:['Única'],
    desc:'Aretes en forma de corazón, con los colores de la bandera de Colombia.',
    cuento:'Un corazón tejido en los colores de la bandera, para llevar el amor por Colombia colgando de las orejas.',
    fotos:['assets/productos/aretes-colombianos-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'porta-termo',cat:'accesorios',nombre:'Porta Termo',precio:39990,color:'Beige',colores:['Beige','Crudo'],tallas:['Única'],
+  {id:'porta-termo',cat:'bolsos',nombre:'Porta Termo',precio:39990,color:'Beige',colores:['Beige','Crudo'],tallas:['Única'],
    desc:'Funda tejida en punto calado para cargar tu botella de vidrio.',
    cuento:'Tejido en punto calado para que tu botella de vidrio viaje protegida y fresca, sin perder el estilo en el camino.',
    fotos:['assets/productos/porta-termo-1.jpg'],horas:'Unas 4 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
@@ -764,55 +762,55 @@ const PRENDAS=[
    desc:'Top tejido en cuadros de girasol, inspirado en los campos del sur del Cauca.',
    cuento:'Cada cuadro tejido es un girasol en miniatura, inspirado en los campos que florecen en el sector sur del Cauca y le dan color a toda la región.',
    fotos:['assets/productos/top-sunflower-1.jpg'],horas:'Unas 12 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano y secar a la sombra.'},
-  {id:'pinzas-cayena',cat:'accesorios',nombre:'Pinzas Cayena',precio:14990,color:'Amarillo',colores:['Amarillo','Rojo','Naranja','Rosado','Fucsia'],tallas:['Única'],
+  {id:'pinzas-cayena',cat:'cabello',nombre:'Pinzas Cayena',precio:14990,color:'Amarillo',colores:['Amarillo','Rojo','Naranja','Rosado','Fucsia'],tallas:['Única'],
    desc:'Pinza para el cabello en forma de flor de cayena.',
    cuento:'Inspiradas en las flores de cayena que crecen en cualquier jardín, estas pinzas tejidas le dan un toque de color a cualquier peinado.',
    fotos:['assets/productos/pinzas-cayena-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'gancho-flour',cat:'accesorios',nombre:'Gancho Flour',precio:19900,color:'Amarillo',colores:['Amarillo','Naranja','Rosado','Café'],tallas:['Única'],
+  {id:'gancho-flour',cat:'cabello',nombre:'Gancho Flour',precio:19900,color:'Amarillo',colores:['Amarillo','Naranja','Rosado','Café'],tallas:['Única'],
    desc:'Gancho de flores tejidas, pensado para cabello abundante.',
    cuento:'Tejido en flores pequeñas pensadas para cabello abundante, este gancho sostiene firme sin perder su encanto floral.',
    fotos:['assets/productos/gancho-flour-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'diadema-amapola',cat:'accesorios',nombre:'Diadema Amapola',precio:19900,color:'Terracota',colores:['Terracota','Blanco'],tallas:['Única'],
+  {id:'diadema-amapola',cat:'cabello',nombre:'Diadema Amapola',precio:19900,color:'Terracota',colores:['Terracota','Blanco'],tallas:['Única'],
    desc:'Diadema de una sola flor tejida a mano, delicada y liviana.',
    cuento:'Una sola flor tejida a mano, inspirada en las amapolas silvestres, para darle un toque delicado a cualquier peinado.',
    fotos:['assets/productos/diadema-amapola-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'aretes-margarita',cat:'accesorios',nombre:'Aretes Margarita',precio:24990,color:'Blanco',colores:['Blanco','Verde'],tallas:['Única'],
+  {id:'aretes-margarita',cat:'aretes',nombre:'Aretes Margarita',precio:24990,color:'Blanco',colores:['Blanco','Verde'],tallas:['Única'],
    desc:'Aretes en forma de margarita, sencillos y livianos.',
    cuento:'Sencillos como una margarita recién cortada, estos aretes tejidos en blanco y verde son el accesorio de todos los días.',
    fotos:['assets/productos/aretes-margarita-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'aretes-corazon',cat:'accesorios',nombre:'Aretes de Corazón',precio:19990,color:'Rosado',colores:['Rojo','Rosado','Blanco','Durazno','Fucsia'],tallas:['Única'],
+  {id:'aretes-corazon',cat:'aretes',nombre:'Aretes de Corazón',precio:19990,color:'Rosado',colores:['Rojo','Rosado','Blanco','Durazno','Fucsia'],tallas:['Única'],
    desc:'Aretes tejidos en forma de corazón, en varios colores.',
    cuento:'Pequeños corazones tejidos a mano, en los tonos más dulces, para llevar contigo un detalle hecho con cariño.',
    fotos:['assets/productos/aretes-corazon-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'balaca-flowers',cat:'accesorios',nombre:'Balaca Flowers',precio:29990,color:'Durazno',colores:['Durazno','Rosado','Blanco','Morado'],tallas:['Única'],
+  {id:'balaca-flowers',cat:'cabello',nombre:'Balaca Flowers',precio:29990,color:'Durazno',colores:['Durazno','Rosado','Blanco','Morado'],tallas:['Única'],
    desc:'Diadema con varias flores tejidas, en colores suaves.',
    cuento:'Varias flores tejidas una junto a otra, en los colores que más gustan, para una diadema que se roba las miradas sin esfuerzo.',
    fotos:['assets/productos/balaca-flowers-1.jpg','assets/productos/balaca-flowers-2.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'primavera-eterna',cat:'accesorios',nombre:'Primavera Eterna',precio:14990,color:'Rosado',colores:['Rosado','Durazno','Fucsia','Amarillo'],tallas:['Única'],
+  {id:'primavera-eterna',cat:'cabello',nombre:'Primavera Eterna',precio:14990,color:'Rosado',colores:['Rosado','Durazno','Fucsia','Amarillo'],tallas:['Única'],
    desc:'Pinza de flores tejidas con brillo dorado en el centro.',
    cuento:'Flores tejidas que no se marchitan con las estaciones — un pedacito de primavera que se queda contigo todo el año.',
    fotos:['assets/productos/primavera-eterna-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'llavero-margarita',cat:'accesorios',nombre:'Llavero Margarita',precio:24990,color:'Blanco',colores:['Blanco','Amarillo','Verde'],tallas:['Única'],
+  {id:'llavero-margarita',cat:'bolsos',nombre:'Llavero Margarita',precio:24990,color:'Blanco',colores:['Blanco','Amarillo','Verde'],tallas:['Única'],
    desc:'Llavero tejido en forma de margarita, con hojas.',
    cuento:'Una margarita tejida a mano con sus hojas, para que las llaves de la casa también tengan un toque de jardín.',
    fotos:['assets/productos/llavero-margarita-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'balaca-tulips',cat:'accesorios',nombre:'Balaca Tulips',precio:29990,color:'Morado',colores:['Negro','Verde','Durazno','Rojo'],tallas:['Única'],
+  {id:'balaca-tulips',cat:'cabello',nombre:'Balaca Tulips',precio:29990,color:'Morado',colores:['Negro','Verde','Durazno','Rojo'],tallas:['Única'],
    desc:'Diadema con tulipanes tejidos en fila.',
    cuento:'Tulipanes tejidos en fila, en colores vivos, para una diadema que luce como un jardín recién florecido.',
    fotos:['assets/productos/balaca-tulips-1.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'llavero-sunflower',cat:'accesorios',nombre:'Llavero Sunflower',precio:24990,color:'Amarillo',colores:['Amarillo','Café'],tallas:['Única'],
+  {id:'llavero-sunflower',cat:'bolsos',nombre:'Llavero Sunflower',precio:24990,color:'Amarillo',colores:['Amarillo','Café'],tallas:['Única'],
    desc:'Llavero tejido en forma de girasol.',
    cuento:'Un girasol en miniatura tejido a mano, para llevar contigo un pedazo de los campos del Cauca a donde vayas.',
    fotos:['assets/productos/llavero-sunflower-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'aretes-margarita-cascada',cat:'accesorios',nombre:'Aretes Margarita Cascada',precio:27990,color:'Blanco',colores:['Blanco','Amarillo'],tallas:['Única'],
+  {id:'aretes-margarita-cascada',cat:'aretes',nombre:'Aretes Margarita Cascada',precio:27990,color:'Blanco',colores:['Blanco','Amarillo'],tallas:['Única'],
    desc:'Aretes largos, con tres margaritas tejidas en cascada.',
    cuento:'Tres margaritas en cascada, tejidas una debajo de la otra, para un balanceo delicado con cada movimiento.',
    fotos:['assets/productos/aretes-margarita-cascada-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'aretes-flor-cerezo',cat:'accesorios',nombre:'Aretes Flor de Cerezo',precio:29990,color:'Turquesa',colores:['Azul claro','Turquesa'],tallas:['Única'],
+  {id:'aretes-flor-cerezo',cat:'aretes',nombre:'Aretes Flor de Cerezo',precio:29990,color:'Turquesa',colores:['Azul claro','Turquesa'],tallas:['Única'],
    desc:'Aretes inspirados en la flor del cerezo, en azul y turquesa.',
    cuento:'Inspirados en la flor del cerezo, estos aretes tejidos en azul y turquesa florecen en cualquier época del año.',
    fotos:['assets/productos/aretes-flor-cerezo-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
-  {id:'balaca-luz-andes',cat:'accesorios',nombre:'Balaca Luz de los Andes',precio:29990,color:'Verde',colores:['Verde','Terracota','Azul oscuro','Rosado'],tallas:['Única'],
+  {id:'balaca-luz-andes',cat:'cabello',nombre:'Balaca Luz de los Andes',precio:29990,color:'Verde',colores:['Verde','Terracota','Azul oscuro','Rosado'],tallas:['Única'],
    desc:'Diadema acanalada, cada color representa una región de Colombia.',
    cuento:'Cada color de esta diadema representa una región de Colombia, del Caribe a los Andes, tejidos juntos en una sola pieza.',
    fotos:['assets/productos/balaca-luz-andes-1.jpg'],horas:'Unas 4 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'}
@@ -955,8 +953,7 @@ $('#tostada-ver').addEventListener('click',()=>{ $('#tostada').classList.remove(
 
 /* ---------- Colección ---------- */
 const rejilla=$('#rejilla');
-const colorTarjeta={};
-rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
+rejilla.innerHTML=PRENDAS.map((p,i)=>{return `
   <article class="tarjeta revela" data-cat="${p.cat}" data-tallas="${p.tallas.join(' ')}" style="transition-delay:${(i%3)*.08}s">
     <div class="tarjeta-media" data-abrir="${i}" role="button" tabindex="0" aria-label="Ver ${p.nombre}">
       ${p.etiqueta?`<span class="etiqueta">${p.etiqueta}</span>`:''}
@@ -967,9 +964,6 @@ rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
     </div>
     <div class="tarjeta-info"><h3>${p.nombre}</h3><span class="precio">${cop(p.precio)}</span></div>
     <p class="tarjeta-sub">${p.desc}</p>
-    <div class="puntos" role="group" aria-label="Color de ${p.nombre}">
-      ${coloresDe(p).map(h=>`<button class="punto" data-p="${p.id}" data-n="${h.n}" aria-label="${h.n}" aria-pressed="${h.n===p.color}"><span style="background:${h.c}"></span></button>`).join('')}
-    </div>
   </article>`;}).join('')+`
   <article class="tarjeta revela" data-cat="todo-medida">
     <div class="medida"><div><span class="guion" style="font-size:2rem">A tu medida</span><h3 style="margin-top:14px">¿No ves la tuya? La diseñamos juntos</h3></div>
@@ -977,10 +971,6 @@ rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
     <a class="btn" href="#encargo">Encargar a medida</a></div>
   </article>`;
 rejilla.addEventListener('click',e=>{
-  const pt=e.target.closest('.punto');
-  if(pt){ const p=PRENDAS.find(x=>x.id===pt.dataset.p); colorTarjeta[p.id]=pt.dataset.n;
-    const svg=$(`#g-${p.id} svg`); if(svg) svg.style.color=colorDe(pt.dataset.n);
-    $$(`.punto[data-p="${p.id}"]`).forEach(b=>b.setAttribute('aria-pressed',b===pt)); return; }
   const gp=e.target.closest('.gp');
   if(gp){ const p=PRENDAS.find(x=>x.id===gp.dataset.p), i=+gp.dataset.i;
     $(`#g-${p.id} img`).src=p.fotos[i];
@@ -1065,7 +1055,7 @@ function restaurarBorrador(){
   refrescarP();
 }
 function abrirProducto(i){
-  act=PRENDAS[i]; pColor=colorTarjeta[act.id]||act.color; pTalla=act.tallas.length===1?act.tallas[0]:null; pCant=1;
+  act=PRENDAS[i]; pColor=act.color; pTalla=act.tallas.length===1?act.tallas[0]:null; pCant=1;
   pPrenda.innerHTML=act.fotos?`<img src="${act.fotos[0]}" alt="${act.nombre}">`:prendaSVG(act,colorDe(pColor));
   $('#p-galeria').innerHTML=(act.fotos&&act.fotos.length>1)?act.fotos.map((f,fi)=>`<button class="gp" data-i="${fi}" aria-label="Foto ${fi+1}" aria-pressed="${fi===0}"></button>`).join(''):'';
   $('#p-hebras').innerHTML=coloresDe(act).map(h=>`<button class="hebra" data-n="${h.n}" aria-label="${h.n}" aria-pressed="false"><span style="background:${h.c}"></span></button>`).join('');
