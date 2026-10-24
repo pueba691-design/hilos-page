@@ -2,7 +2,7 @@
 
 Las prendas viven en un solo arreglo, `PRENDAS`, dentro de `index.html` (buscar `/* ---------- Datos (contenido de ejemplo, editable) ---------- */`). **No hay base de datos ni CMS** — para ~40 productos esto es suficiente; no hace falta nada más sofisticado (ver conversación sobre cuándo pasar a un framework: solo si el catálogo crece a cientos de prendas o se necesitan cuentas de usuario/inventario real).
 
-Estado actual (2026-10-24): **30 de ~40 prendas ya son reales** (con foto propia), las otras 5 (Cárdigan Cafetal, Gorro Páramo, Bolso Plaza, Bufanda Pacífico, Top Guayacán — las originales de ejemplo) siguen con ilustración de muestra hasta que se reemplacen.
+Estado actual (2026-10-24): **30 de ~40 prendas, todas reales, con foto propia.** Las 5 prendas de ejemplo originales (Cárdigan Cafetal, Gorro Páramo, Bolso Plaza, Bufanda Pacífico, Top Guayacán) ya se quitaron del arreglo `PRENDAS` — el catálogo en producción no mezcla ilustraciones de muestra con productos reales. El sistema de ilustración (`prendaSVG`/`escenaSVG`, campos `escena`/`pie`) sigue en el código como *fallback* por si se agrega una prenda nueva sin foto todavía, pero no se usa en ningún producto activo ahora mismo.
 
 ## Estructura de cada prenda
 
