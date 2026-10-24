@@ -185,13 +185,15 @@ button{font:inherit;color:inherit}
 .escena{position:absolute;inset:0;opacity:0;transform:scale(1.06);transition:opacity 1s var(--ease),transform 1.6s var(--ease)}
 .escena.activa{opacity:1;transform:none}
 .escena svg{width:100%;height:100%;display:block}
-.velo{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(20,12,8,.28));pointer-events:none}
-.flota{position:absolute;left:50%;bottom:6%;width:min(52%,360px);aspect-ratio:1/1;transform:translateX(-50%);transform-style:preserve-3d;transition:transform .3s ease-out}
+.escena img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(34px) saturate(1.15) brightness(.88);transform:scale(1.2)}
+.velo{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,8,.1) 0%,transparent 35%,rgba(20,12,8,.35) 100%);pointer-events:none}
+.flota{position:absolute;left:50%;bottom:7%;width:min(46%,320px);aspect-ratio:4/5;transform:translateX(-50%);transform-style:preserve-3d;transition:transform .3s ease-out}
 .flota .fp{position:absolute;inset:0;opacity:0;transform:translateY(30px) rotate(-6deg) scale(.94);transition:opacity .8s var(--ease),transform .9s var(--ease)}
 .flota .fp.activa{opacity:1;transform:none}
 .flota svg{width:100%;height:100%;filter:drop-shadow(0 30px 30px rgba(20,12,8,.35))}
-.flota img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 30px rgba(20,12,8,.35))}
+.flota img{width:100%;height:100%;object-fit:cover;display:block;border-radius:18px;border:5px solid rgba(255,255,255,.92);box-shadow:0 28px 54px rgba(20,12,8,.38),0 4px 14px rgba(20,12,8,.18)}
 .leyenda{position:absolute;left:20px;bottom:18px;z-index:2;font-size:.8125rem;color:#FFF;padding:6px 12px;border-radius:999px;background:rgba(20,12,8,.45);backdrop-filter:blur(6px)}
+.leyenda.oculta{display:none}
 .relato{position:relative;height:440px}
 .panel{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .8s var(--ease);pointer-events:none}
 .panel.activo{opacity:1;transform:none;pointer-events:auto}
@@ -488,7 +490,7 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
     <div class="envoltura">
       <div class="cabeza revela">
         <h2 id="t-coleccion">La colección</h2>
-        <p>Cinco prendas, cinco lugares. Elige el color del hilo y tu talla; nosotros la tejemos desde el primer punto.</p>
+        <p>Cada prenda, su historia. Elige el color del hilo y tu talla; nosotros la tejemos desde el primer punto.</p>
       </div>
       <div class="filtros-barra">
         <div class="filtros revela" role="group" aria-label="Filtrar por categoría">
@@ -680,26 +682,6 @@ const HILOS=[{n:'Tierra',c:'#A15A3C'},{n:'Caramelo',c:'#C1825F'},{n:'Arena',c:'#
 const colorDe=n=>(HILOS.find(h=>h.n===n)||HILOS[0]).c;
 const coloresDe=p=>(p.colores?p.colores.map(n=>HILOS.find(h=>h.n===n)).filter(Boolean):HILOS.slice(0,5));
 const PRENDAS=[
-  {id:'cardigan',cat:'abrigos',nombre:'Cárdigan Cafetal',precio:180000,color:'Tierra',tallas:['S','M','L'],etiqueta:'Más pedido',
-   desc:'Cárdigan largo y abierto al frente, en punto alto con franjas en relieve.',
-   cuento:'Sus franjas en relieve siguen los surcos de los cafetales de ladera, y su color viene del grano recién tostado.',
-   escena:'cafetal',pie:'Cafetales de ladera',horas:'Unas 22 horas de tejido a mano.',material:'Algodón peinado. Lavar a mano en agua fría y secar extendido.'},
-  {id:'gorro',cat:'accesorios',nombre:'Gorro Páramo',precio:65000,color:'Arena',tallas:['Única'],
-   desc:'Gorro de punto grueso con borde acanalado y pompón tejido.',
-   cuento:'El pompón y el punto grueso vienen de los frailejones del páramo, que se cubren de pelusa para guardar el calor en las noches frías.',
-   escena:'paramo',pie:'Frailejones del páramo',horas:'Unas 6 horas de tejido a mano.',material:'Lana acrílica suave. Lavar a mano en agua fría.'},
-  {id:'bolso',cat:'accesorios',nombre:'Bolso Plaza',precio:95000,color:'Caramelo',tallas:['Única'],
-   desc:'Bolso de mano de tejido cerrado, con asas firmes y un motivo circular.',
-   cuento:'Su tejido cerrado copia el de los canastos de las plazas de mercado, hechos para cargar fruta sin que se maltrate.',
-   escena:'plaza',pie:'Canastos de la plaza de mercado',horas:'Unas 10 horas de tejido a mano.',material:'Cordón de algodón. Limpiar con paño húmedo.'},
-  {id:'bufanda',cat:'accesorios',nombre:'Bufanda Pacífico',precio:70000,color:'Salvia',tallas:['Única'],
-   desc:'Bufanda larga con franjas onduladas y flecos en las puntas.',
-   cuento:'Las ondas de sus franjas repiten el vaivén de la marea en el Pacífico, donde el mar sube y baja varios metros en un mismo día.',
-   escena:'pacifico',pie:'La marea del Pacífico',horas:'Unas 12 horas de tejido a mano.',material:'Lana merino. Lavar a mano en agua fría y secar extendida.'},
-  {id:'top',cat:'tops',nombre:'Top Guayacán',precio:85000,color:'Crudo',tallas:['XS','S','M'],etiqueta:'Nuevo',
-   desc:'Top corto de tiras, con flores tejidas en el pecho.',
-   cuento:'Las flores del pecho vienen del guayacán amarillo, un árbol que florece de golpe y cubre la calle de pétalos por unos pocos días.',
-   escena:'guayacan',pie:'El guayacán en flor',horas:'Unas 9 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano y secar a la sombra.'},
   {id:'aretes-sunflower',cat:'accesorios',nombre:'Aretes Sunflower',precio:29990,color:'Amarillo',colores:['Amarillo','Café claro','Café oscuro'],tallas:['Única'],etiqueta:'Nuevo',
    desc:'Aretes tejidos en forma de girasol, con gancho dorado.',
    cuento:'Sus pétalos amarillos y el centro café nacen de los campos de girasoles del Valle del Cauca, que se abren de cara al sol en todo su esplendor.',
@@ -1114,7 +1096,7 @@ pEsc.addEventListener('pointerleave',()=>{ if(!cerca) pGiro.style.transform=''; 
 
 /* ---------- Historias con scroll ---------- */
 const hist=$('#historias'); hist.style.setProperty('--n',PRENDAS.length);
-$('#escenas').innerHTML=PRENDAS.map((p,i)=>`<div class="escena" data-i="${i}">${p.escena?escenaSVG(p.escena):''}</div>`).join('');
+$('#escenas').innerHTML=PRENDAS.map((p,i)=>`<div class="escena" data-i="${i}">${p.fotos?`<img src="${p.fotos[0]}" alt="" loading="lazy">`:(p.escena?escenaSVG(p.escena):'')}</div>`).join('');
 $('#flota').innerHTML=PRENDAS.map((p,i)=>`<div class="fp" data-i="${i}">${p.fotos?`<img src="${p.fotos[0]}" alt="${p.nombre}">`:prendaSVG(p,colorDe(p.color))}</div>`).join('');
 $('#relato').innerHTML=PRENDAS.map((p,i)=>`
   <article class="panel" data-i="${i}" aria-hidden="true">
@@ -1141,7 +1123,8 @@ function historia(){
   $$('.fp').forEach(el=>el.classList.toggle('activa',+el.dataset.i===i));
   $$('.panel').forEach(el=>{const on=+el.dataset.i===i; el.classList.toggle('activo',on); el.setAttribute('aria-hidden',!on); el.querySelector('button').tabIndex=on?0:-1;});
   $$('.nudo').forEach(el=>{const k=+el.dataset.i; el.classList.toggle('hecho',k<=i); el.setAttribute('aria-current',k===i);});
-  $('#leyenda').textContent=PRENDAS[i].pie+' (ilustración de muestra)';
+  $('#leyenda').textContent=PRENDAS[i].pie||'';
+  $('#leyenda').classList.toggle('oculta',!PRENDAS[i].pie);
 }
 if(finoPuntero&&!reduce){
   $('#escenario').addEventListener('pointermove',e=>{const b=e.currentTarget.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;
