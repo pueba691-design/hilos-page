@@ -157,6 +157,9 @@ button{font:inherit;color:inherit}
 .tarjeta-media .gira svg{display:block;width:100%;height:auto;filter:drop-shadow(0 22px 24px rgba(59,35,25,.18))}
 .tarjeta-media .sombra{position:absolute;bottom:12%;left:50%;width:46%;height:18px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(59,35,25,.18),transparent);transition:transform .6s var(--ease)}
 .etiqueta{position:absolute;top:16px;left:16px;padding:6px 12px;border-radius:999px;background:var(--bg);font-size:.75rem;font-weight:500;color:var(--ink)}
+.galeria-puntos{position:absolute;top:14px;right:14px;display:flex;gap:6px;z-index:2}
+.gp{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(0,0,0,.25);background:rgba(255,255,255,.85);padding:0;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:background .25s,transform .2s}
+.gp[aria-pressed="true"]{background:#000;border-color:#000;transform:scale(1.2)}
 .vista{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:center;opacity:0;transform:translateY(12px);transition:opacity .4s,transform .4s var(--ease);pointer-events:none}
 .vista span{display:inline-flex;min-height:44px;align-items:center;padding:0 22px;border-radius:999px;background:#000;color:#C1825F;font-weight:600;font-size:.875rem}
 .tarjeta-media:hover .vista,.tarjeta-media:focus-visible .vista{opacity:1;transform:none}
@@ -277,6 +280,9 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 .p-escenario.cerca .p-prenda{transform:scale(2.6)}
 .p-escenario.cerca{cursor:zoom-out}
 .lupa{position:absolute;bottom:20px;right:20px;background:var(--bg);color:var(--ink);border:0;min-height:44px;padding:0 18px;border-radius:999px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;font-weight:500}
+.p-galeria{position:absolute;bottom:20px;left:20px;display:flex;gap:8px;z-index:2}
+.p-galeria .gp{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(0,0,0,.25);background:rgba(255,255,255,.85);padding:0;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:background .25s,transform .2s}
+.p-galeria .gp[aria-pressed="true"]{background:#000;border-color:#000;transform:scale(1.2)}
 .lupa svg{width:18px;height:18px}
 .p-info{padding:48px clamp(24px,4vw,56px) 48px;position:relative}
 .cerrar{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;border:0;background:var(--card);cursor:pointer;display:grid;place-items:center;z-index:2}
@@ -582,6 +588,7 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
     <div class="p-escenario" id="p-escenario">
       <div class="p-giro" id="p-giro"><div class="p-prenda" id="p-prenda"></div></div>
       <button class="lupa" id="p-lupa" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M11 8v6M8 11h6"/></svg><span>Ver los puntos</span></button>
+      <div class="p-galeria" id="p-galeria" role="group" aria-label="Más fotos"></div>
     </div>
     <div class="p-info">
       <button class="cerrar" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
@@ -668,7 +675,8 @@ if(matchMedia('(display-mode: standalone)').matches){
 
 /* ---------- Datos (contenido de ejemplo, editable) ---------- */
 const HILOS=[{n:'Tierra',c:'#A15A3C'},{n:'Caramelo',c:'#C1825F'},{n:'Arena',c:'#D9B99B'},{n:'Crudo',c:'#EDE2D6'},{n:'Café',c:'#5A3325'},{n:'Salvia',c:'#8E9677'},
-  {n:'Amarillo',c:'#E9A830'},{n:'Café claro',c:'#9C6B3E'},{n:'Café oscuro',c:'#4A2B1A'},{n:'Lila',c:'#C4A4D6'},{n:'Morado',c:'#5B3E96'},{n:'Turquesa',c:'#2E8F8A'},{n:'Blanco',c:'#FFFFFF'},{n:'Azul claro',c:'#6FA8D8'},{n:'Azul oscuro',c:'#1F3B73'},{n:'Terracota',c:'#C1512E'},{n:'Mostaza',c:'#D29A1E'}];
+  {n:'Amarillo',c:'#E9A830'},{n:'Café claro',c:'#9C6B3E'},{n:'Café oscuro',c:'#4A2B1A'},{n:'Lila',c:'#C4A4D6'},{n:'Morado',c:'#5B3E96'},{n:'Turquesa',c:'#2E8F8A'},{n:'Blanco',c:'#FFFFFF'},{n:'Azul claro',c:'#6FA8D8'},{n:'Azul oscuro',c:'#1F3B73'},{n:'Terracota',c:'#C1512E'},{n:'Mostaza',c:'#D29A1E'},
+  {n:'Rojo',c:'#C0392B'},{n:'Fucsia',c:'#D6227A'},{n:'Verde',c:'#4A7C3F'},{n:'Verde militar',c:'#6B6B3A'},{n:'Vino tinto',c:'#6B1F2A'},{n:'Rosado',c:'#E8A0BA'},{n:'Naranja',c:'#E07A2C'},{n:'Durazno',c:'#F0B48A'},{n:'Negro',c:'#1A1A1A'},{n:'Beige',c:'#D8C3A5'},{n:'Azul Turquí',c:'#1B3B6F'}];
 const colorDe=n=>(HILOS.find(h=>h.n===n)||HILOS[0]).c;
 const coloresDe=p=>(p.colores?p.colores.map(n=>HILOS.find(h=>h.n===n)).filter(Boolean):HILOS.slice(0,5));
 const PRENDAS=[
@@ -703,7 +711,115 @@ const PRENDAS=[
   {id:'canguro-margarita',cat:'accesorios',nombre:'Canguro Margarita',precio:89990,color:'Terracota',colores:['Terracota','Mostaza','Blanco'],tallas:['Única'],etiqueta:'Nuevo',
    desc:'Riñonera tejida con flores margarita, correa ajustable.',
    cuento:'Sus flores blancas repiten las margaritas que crecen entre el pasto en cualquier parque, y su forma está pensada para llevar el celular, las llaves y los audífonos sin pensarlo dos veces.',
-   fotos:['assets/productos/canguro-margarita-1.jpg'],horas:'Unas 10 horas de tejido a mano.',material:'Algodón mercerizado. Limpiar con paño húmedo.'}
+   fotos:['assets/productos/canguro-margarita-1.jpg'],horas:'Unas 10 horas de tejido a mano.',material:'Algodón mercerizado. Limpiar con paño húmedo.'},
+  {id:'canguro-suspiro-lana',cat:'accesorios',nombre:'Canguro Suspiro de Lana',precio:89990,color:'Beige',colores:['Beige'],tallas:['Única'],
+   desc:'Riñonera tejida que combina lo artesanal con lo moderno, ideal para el uso diario.',
+   cuento:'Nació para acompañar el día a día sin pensarlo dos veces: liviana, cómoda y tejida con el mismo cuidado de una prenda especial, para que lo artesanal también quepa en lo cotidiano.',
+   fotos:['assets/productos/canguro-suspiro-lana-1.jpg'],horas:'Unas 7 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
+  {id:'correa-flor-novia',cat:'accesorios',nombre:'Correa Flor de Novia',precio:39990,color:'Fucsia',colores:['Fucsia','Azul oscuro'],tallas:['Única'],
+   desc:'Correa tejida para el celular, de 35 cm, compatible con Android y iPhone.',
+   cuento:'Sus flores repiten el fucsia y el azul de la flor de novia, la que tradicionalmente lleva quien se casa — aquí tejida para que el celular también vaya contigo a donde sea, sin soltarse de la mano.',
+   fotos:['assets/productos/correa-flor-novia-1.jpg','assets/productos/correa-flor-novia-2.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'manta-ramo-rosas',cat:'accesorios',nombre:'Manta Ramo de Rosas',precio:179990,color:'Rosado',colores:['Rosado','Fucsia','Vino tinto','Crudo','Verde militar'],tallas:['Única'],
+   desc:'Ramo de rosas tejidas a mano, ideal para regalar en un día especial.',
+   cuento:'Un ramo que no se marchita: cada rosa se teje una por una, para regalar algo que dure mucho más que un día especial.',
+   fotos:['assets/productos/manta-ramo-rosas-1.jpg'],horas:'Unas 12 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
+  {id:'bolso-colombiano',cat:'accesorios',nombre:'Bolso Colombiano',precio:129990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo','Blanco'],tallas:['Única'],
+   desc:'Bolso tejido en cuadros, con los colores de la bandera de Colombia.',
+   cuento:'Sus cuadros en amarillo, azul y rojo llevan los colores de la bandera a todas partes, para cargar el orgullo por el país en cada salida.',
+   fotos:['assets/productos/bolso-colombiano-1.jpg'],horas:'Unas 9 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
+  {id:'gorro-colombiano',cat:'accesorios',nombre:'Gorro Colombiano',precio:59990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['S'],
+   desc:'Gorro de ala ancha inspirado en los colores de la bandera de Colombia.',
+   cuento:'Tejido con los colores de la bandera, para cubrirte del sol sin dejar de llevar a Colombia en la cabeza.',
+   fotos:['assets/productos/gorro-colombiano-1.jpg'],horas:'Unas 5 horas de tejido a mano.',material:'Lana acrílica suave. Lavar a mano en agua fría.'},
+  {id:'panoleta-colombiana',cat:'accesorios',nombre:'Pañoleta Colombiana',precio:50000,color:'Rojo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['XS','S','M'],
+   desc:'Pañoleta versátil: en el cabello, en la cintura, de espaldar o al cuello.',
+   cuento:'Una sola prenda, cuatro formas de llevarla — en el cabello, en la cintura, de espaldar o al cuello —, siempre con los colores que nos representan.',
+   fotos:['assets/productos/panoleta-colombiana-1.jpg','assets/productos/panoleta-colombiana-2.jpg'],horas:'Unas 6 horas de tejido a mano.',material:'Algodón. Lavar a mano en agua fría.'},
+  {id:'balaca-colombiana',cat:'accesorios',nombre:'Balaca Colombiana',precio:59990,color:'Amarillo',colores:['Amarillo','Azul oscuro','Rojo'],tallas:['Única'],
+   desc:'Diadema tejida con los colores de la bandera de Colombia.',
+   cuento:'Los colores de la bandera, tejidos para llevar el outfit a otro nivel sin decir una palabra.',
+   fotos:['assets/productos/balaca-colombiana-1.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Lana acrílica suave. Lavar a mano en agua fría.'},
+  {id:'top-butterfly',cat:'tops',nombre:'Top Butterfly',precio:119990,color:'Turquesa',colores:['Turquesa','Azul claro','Azul Turquí','Negro'],tallas:['XS','S'],
+   desc:'Top con forma de alas de mariposa, en tonos azules y turquesa.',
+   cuento:'Sus alas se tejen punto a punto como las de una mariposa real, para que cada movimiento se sienta ligero.',
+   fotos:['assets/productos/top-butterfly-1.jpg'],horas:'Unas 14 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano en agua fría y secar extendido.'},
+  {id:'top-guayacan-violeta',cat:'tops',nombre:'Top Guayacán Violeta',precio:179990,color:'Morado',colores:['Lila','Morado'],tallas:['S','M'],
+   desc:'Top tejido en tonos lila y morado, inspirado en el guayacán rosado.',
+   cuento:'Los lilas y morados de esta prenda vienen del guayacán rosado, el árbol que en ciertas épocas del año cubre de violeta los paisajes del Valle del Cauca.',
+   fotos:['assets/productos/top-guayacan-violeta-1.jpg'],horas:'Unas 16 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano en agua fría y secar extendido.'},
+  {id:'aretes-colombianos',cat:'accesorios',nombre:'Aretes Colombianos',precio:39990,color:'Azul oscuro',colores:['Azul oscuro','Rojo','Amarillo'],tallas:['Única'],
+   desc:'Aretes en forma de corazón, con los colores de la bandera de Colombia.',
+   cuento:'Un corazón tejido en los colores de la bandera, para llevar el amor por Colombia colgando de las orejas.',
+   fotos:['assets/productos/aretes-colombianos-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'porta-termo',cat:'accesorios',nombre:'Porta Termo',precio:39990,color:'Beige',colores:['Beige','Crudo'],tallas:['Única'],
+   desc:'Funda tejida en punto calado para cargar tu botella de vidrio.',
+   cuento:'Tejido en punto calado para que tu botella de vidrio viaje protegida y fresca, sin perder el estilo en el camino.',
+   fotos:['assets/productos/porta-termo-1.jpg'],horas:'Unas 4 horas de tejido a mano.',material:'Algodón. Limpiar con paño húmedo.'},
+  {id:'sueter-tulip',cat:'abrigos',nombre:'Suéter Tulip',precio:269990,color:'Rosado',colores:['Rosado','Verde','Blanco'],tallas:['S','M'],
+   desc:'Suéter de manga larga en franjas, inspirado en los colores del tulipán.',
+   cuento:'Sus franjas en rosado, verde y blanco repiten los colores de los tulipanes recién abiertos, tejidas en un punto suave para los días de frío.',
+   fotos:['assets/productos/sueter-tulip-1.jpg'],horas:'Unas 20 horas de tejido a mano.',material:'Lana acrílica suave. Lavar a mano en agua fría y secar extendido.'},
+  {id:'top-sky',cat:'tops',nombre:'Top Sky',precio:149990,color:'Azul oscuro',colores:['Azul oscuro','Blanco'],tallas:['XS','S'],
+   desc:'Top en cuadros azules y blancos, inspirado en el cielo del norte del Cauca.',
+   cuento:'Su cuadrícula azul y blanca repite el cielo despejado visto desde el norte del Cauca, tejida para los días de sol.',
+   fotos:['assets/productos/top-sky-1.jpg'],horas:'Unas 10 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano en agua fría y secar extendido.'},
+  {id:'top-sunflower',cat:'tops',nombre:'Top Sunflower',precio:169990,color:'Amarillo',colores:['Blanco','Café','Amarillo'],tallas:['XS','S'],
+   desc:'Top tejido en cuadros de girasol, inspirado en los campos del sur del Cauca.',
+   cuento:'Cada cuadro tejido es un girasol en miniatura, inspirado en los campos que florecen en el sector sur del Cauca y le dan color a toda la región.',
+   fotos:['assets/productos/top-sunflower-1.jpg'],horas:'Unas 12 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano y secar a la sombra.'},
+  {id:'pinzas-cayena',cat:'accesorios',nombre:'Pinzas Cayena',precio:14990,color:'Amarillo',colores:['Amarillo','Rojo','Naranja','Rosado','Fucsia'],tallas:['Única'],
+   desc:'Pinza para el cabello en forma de flor de cayena.',
+   cuento:'Inspiradas en las flores de cayena que crecen en cualquier jardín, estas pinzas tejidas le dan un toque de color a cualquier peinado.',
+   fotos:['assets/productos/pinzas-cayena-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'gancho-flour',cat:'accesorios',nombre:'Gancho Flour',precio:19900,color:'Amarillo',colores:['Amarillo','Naranja','Rosado','Café'],tallas:['Única'],
+   desc:'Gancho de flores tejidas, pensado para cabello abundante.',
+   cuento:'Tejido en flores pequeñas pensadas para cabello abundante, este gancho sostiene firme sin perder su encanto floral.',
+   fotos:['assets/productos/gancho-flour-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'diadema-amapola',cat:'accesorios',nombre:'Diadema Amapola',precio:19900,color:'Terracota',colores:['Terracota','Blanco'],tallas:['Única'],
+   desc:'Diadema de una sola flor tejida a mano, delicada y liviana.',
+   cuento:'Una sola flor tejida a mano, inspirada en las amapolas silvestres, para darle un toque delicado a cualquier peinado.',
+   fotos:['assets/productos/diadema-amapola-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'aretes-margarita',cat:'accesorios',nombre:'Aretes Margarita',precio:24990,color:'Blanco',colores:['Blanco','Verde'],tallas:['Única'],
+   desc:'Aretes en forma de margarita, sencillos y livianos.',
+   cuento:'Sencillos como una margarita recién cortada, estos aretes tejidos en blanco y verde son el accesorio de todos los días.',
+   fotos:['assets/productos/aretes-margarita-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'aretes-corazon',cat:'accesorios',nombre:'Aretes de Corazón',precio:19990,color:'Rosado',colores:['Rojo','Rosado','Blanco','Durazno','Fucsia'],tallas:['Única'],
+   desc:'Aretes tejidos en forma de corazón, en varios colores.',
+   cuento:'Pequeños corazones tejidos a mano, en los tonos más dulces, para llevar contigo un detalle hecho con cariño.',
+   fotos:['assets/productos/aretes-corazon-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'balaca-flowers',cat:'accesorios',nombre:'Balaca Flowers',precio:29990,color:'Durazno',colores:['Durazno','Rosado','Blanco','Morado'],tallas:['Única'],
+   desc:'Diadema con varias flores tejidas, en colores suaves.',
+   cuento:'Varias flores tejidas una junto a otra, en los colores que más gustan, para una diadema que se roba las miradas sin esfuerzo.',
+   fotos:['assets/productos/balaca-flowers-1.jpg','assets/productos/balaca-flowers-2.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'primavera-eterna',cat:'accesorios',nombre:'Primavera Eterna',precio:14990,color:'Rosado',colores:['Rosado','Durazno','Fucsia','Amarillo'],tallas:['Única'],
+   desc:'Pinza de flores tejidas con brillo dorado en el centro.',
+   cuento:'Flores tejidas que no se marchitan con las estaciones — un pedacito de primavera que se queda contigo todo el año.',
+   fotos:['assets/productos/primavera-eterna-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'llavero-margarita',cat:'accesorios',nombre:'Llavero Margarita',precio:24990,color:'Blanco',colores:['Blanco','Amarillo','Verde'],tallas:['Única'],
+   desc:'Llavero tejido en forma de margarita, con hojas.',
+   cuento:'Una margarita tejida a mano con sus hojas, para que las llaves de la casa también tengan un toque de jardín.',
+   fotos:['assets/productos/llavero-margarita-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'balaca-tulips',cat:'accesorios',nombre:'Balaca Tulips',precio:29990,color:'Morado',colores:['Negro','Verde','Durazno','Rojo'],tallas:['Única'],
+   desc:'Diadema con tulipanes tejidos en fila.',
+   cuento:'Tulipanes tejidos en fila, en colores vivos, para una diadema que luce como un jardín recién florecido.',
+   fotos:['assets/productos/balaca-tulips-1.jpg'],horas:'Unas 3 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'llavero-sunflower',cat:'accesorios',nombre:'Llavero Sunflower',precio:24990,color:'Amarillo',colores:['Amarillo','Café'],tallas:['Única'],
+   desc:'Llavero tejido en forma de girasol.',
+   cuento:'Un girasol en miniatura tejido a mano, para llevar contigo un pedazo de los campos del Cauca a donde vayas.',
+   fotos:['assets/productos/llavero-sunflower-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'aretes-margarita-cascada',cat:'accesorios',nombre:'Aretes Margarita Cascada',precio:27990,color:'Blanco',colores:['Blanco','Amarillo'],tallas:['Única'],
+   desc:'Aretes largos, con tres margaritas tejidas en cascada.',
+   cuento:'Tres margaritas en cascada, tejidas una debajo de la otra, para un balanceo delicado con cada movimiento.',
+   fotos:['assets/productos/aretes-margarita-cascada-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'aretes-flor-cerezo',cat:'accesorios',nombre:'Aretes Flor de Cerezo',precio:29990,color:'Turquesa',colores:['Azul claro','Turquesa'],tallas:['Única'],
+   desc:'Aretes inspirados en la flor del cerezo, en azul y turquesa.',
+   cuento:'Inspirados en la flor del cerezo, estos aretes tejidos en azul y turquesa florecen en cualquier época del año.',
+   fotos:['assets/productos/aretes-flor-cerezo-1.jpg'],horas:'Una hora de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'balaca-luz-andes',cat:'accesorios',nombre:'Balaca Luz de los Andes',precio:29990,color:'Verde',colores:['Verde','Terracota','Azul oscuro','Rosado'],tallas:['Única'],
+   desc:'Diadema acanalada, cada color representa una región de Colombia.',
+   cuento:'Cada color de esta diadema representa una región de Colombia, del Caribe a los Andes, tejidos juntos en una sola pieza.',
+   fotos:['assets/productos/balaca-luz-andes-1.jpg'],horas:'Unas 4 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'}
 ];
 
 /* ---------- Ilustraciones ---------- */
@@ -846,12 +962,13 @@ const rejilla=$('#rejilla');
 const colorTarjeta={};
 rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
   <article class="tarjeta revela" data-cat="${p.cat}" data-tallas="${p.tallas.join(' ')}" style="transition-delay:${(i%3)*.08}s">
-    <button class="tarjeta-media" data-abrir="${i}" aria-label="Ver ${p.nombre}">
+    <div class="tarjeta-media" data-abrir="${i}" role="button" tabindex="0" aria-label="Ver ${p.nombre}">
       ${p.etiqueta?`<span class="etiqueta">${p.etiqueta}</span>`:''}
       <span class="sombra"></span>
       <span class="gira" id="g-${p.id}">${p.fotos?`<img src="${p.fotos[0]}" alt="${p.nombre}" loading="lazy">`:prendaSVG(p,colorDe(p.color))}</span>
+      ${p.fotos&&p.fotos.length>1?`<span class="galeria-puntos" role="group" aria-label="Más fotos de ${p.nombre}">${p.fotos.map((f,fi)=>`<button class="gp" data-p="${p.id}" data-i="${fi}" aria-label="Foto ${fi+1}" aria-pressed="${fi===0}"></button>`).join('')}</span>`:''}
       <span class="vista" aria-hidden="true"><span>Ver prenda y su historia</span></span>
-    </button>
+    </div>
     <div class="tarjeta-info"><h3>${p.nombre}</h3><span class="precio">${cop(p.precio)}</span></div>
     <p class="tarjeta-sub">${p.desc}</p>
     <div class="puntos" role="group" aria-label="Color de ${p.nombre}">
@@ -868,7 +985,16 @@ rejilla.addEventListener('click',e=>{
   if(pt){ const p=PRENDAS.find(x=>x.id===pt.dataset.p); colorTarjeta[p.id]=pt.dataset.n;
     const svg=$(`#g-${p.id} svg`); if(svg) svg.style.color=colorDe(pt.dataset.n);
     $$(`.punto[data-p="${p.id}"]`).forEach(b=>b.setAttribute('aria-pressed',b===pt)); return; }
+  const gp=e.target.closest('.gp');
+  if(gp){ const p=PRENDAS.find(x=>x.id===gp.dataset.p), i=+gp.dataset.i;
+    $(`#g-${p.id} img`).src=p.fotos[i];
+    $$(`.gp[data-p="${p.id}"]`).forEach(b=>b.setAttribute('aria-pressed',b===gp)); return; }
   const ab=e.target.closest('[data-abrir]'); if(ab){ abrirProducto(+ab.dataset.abrir); }
+});
+rejilla.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'&&e.key!==' ') return;
+  const ab=e.target.closest('[data-abrir]'); if(!ab||e.target.closest('.gp')) return;
+  e.preventDefault(); abrirProducto(+ab.dataset.abrir);
 });
 if(finoPuntero&&!reduce){
   rejilla.addEventListener('pointermove',e=>{
@@ -941,6 +1067,7 @@ function restaurarBorrador(){
 function abrirProducto(i){
   act=PRENDAS[i]; pColor=colorTarjeta[act.id]||act.color; pTalla=act.tallas.length===1?act.tallas[0]:null; pCant=1;
   pPrenda.innerHTML=act.fotos?`<img src="${act.fotos[0]}" alt="${act.nombre}">`:prendaSVG(act,colorDe(pColor));
+  $('#p-galeria').innerHTML=(act.fotos&&act.fotos.length>1)?act.fotos.map((f,fi)=>`<button class="gp" data-i="${fi}" aria-label="Foto ${fi+1}" aria-pressed="${fi===0}"></button>`).join(''):'';
   $('#p-hebras').innerHTML=coloresDe(act).map(h=>`<button class="hebra" data-n="${h.n}" aria-label="${h.n}" aria-pressed="false"><span style="background:${h.c}"></span></button>`).join('');
   $('#p-nombre').textContent=act.nombre; $('#p-precio').textContent=cop(act.precio); $('#p-desc').textContent=act.desc;
   $('#p-cuento').textContent=act.cuento;
@@ -971,6 +1098,12 @@ dlgP.addEventListener('close',borrarBorrador);
 restaurarBorrador();
 function setCerca(v){cerca=v; pEsc.classList.toggle('cerca',v); lupa.setAttribute('aria-pressed',v); lupa.querySelector('span').textContent=v?'Ver completa':'Ver los puntos'; pGiro.style.transform=''; pPrenda.style.transformOrigin='50% 50%';}
 lupa.addEventListener('click',()=>setCerca(!cerca));
+$('#p-galeria').addEventListener('click',e=>{
+  const b=e.target.closest('.gp'); if(!b) return;
+  const i=+b.dataset.i;
+  pPrenda.querySelector('img').src=act.fotos[i];
+  $$('#p-galeria .gp').forEach(x=>x.setAttribute('aria-pressed',x===b));
+});
 pPrenda.addEventListener('click',()=>{ if(cerca) setCerca(false); });
 pEsc.addEventListener('pointermove',e=>{
   const b=pEsc.getBoundingClientRect(), x=(e.clientX-b.left)/b.width, y=(e.clientY-b.top)/b.height;
