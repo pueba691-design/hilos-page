@@ -152,6 +152,8 @@ button{font:inherit;color:inherit}
 .tarjeta.fuera{display:none}
 .tarjeta-media{position:relative;aspect-ratio:4/5;border-radius:22px;background:var(--card);border:0;padding:0;cursor:pointer;overflow:hidden;display:grid;place-items:center;perspective:900px;width:100%}
 .tarjeta-media .gira{width:72%;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.tarjeta-media .gira:has(img){width:100%;height:100%}
+.tarjeta-media .gira img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
 .tarjeta-media .gira svg{display:block;width:100%;height:auto;filter:drop-shadow(0 22px 24px rgba(59,35,25,.18))}
 .tarjeta-media .sombra{position:absolute;bottom:12%;left:50%;width:46%;height:18px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(59,35,25,.18),transparent);transition:transform .6s var(--ease)}
 .etiqueta{position:absolute;top:16px;left:16px;padding:6px 12px;border-radius:999px;background:var(--bg);font-size:.75rem;font-weight:500;color:var(--ink)}
@@ -185,6 +187,7 @@ button{font:inherit;color:inherit}
 .flota .fp{position:absolute;inset:0;opacity:0;transform:translateY(30px) rotate(-6deg) scale(.94);transition:opacity .8s var(--ease),transform .9s var(--ease)}
 .flota .fp.activa{opacity:1;transform:none}
 .flota svg{width:100%;height:100%;filter:drop-shadow(0 30px 30px rgba(20,12,8,.35))}
+.flota img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 30px rgba(20,12,8,.35))}
 .leyenda{position:absolute;left:20px;bottom:18px;z-index:2;font-size:.8125rem;color:#FFF;padding:6px 12px;border-radius:999px;background:rgba(20,12,8,.45);backdrop-filter:blur(6px)}
 .relato{position:relative;height:440px}
 .panel{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .8s var(--ease);pointer-events:none}
@@ -270,6 +273,7 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 .p-giro{width:min(84%,440px);aspect-ratio:1/1;transform-style:preserve-3d;transition:transform .25s ease-out}
 .p-prenda{width:100%;height:100%;transition:transform .45s var(--ease)}
 .p-prenda svg{width:100%;height:100%;filter:drop-shadow(0 24px 26px rgba(59,35,25,.2))}
+.p-prenda img{width:100%;height:100%;object-fit:contain;border-radius:18px;filter:drop-shadow(0 24px 26px rgba(59,35,25,.2))}
 .p-escenario.cerca .p-prenda{transform:scale(2.6)}
 .p-escenario.cerca{cursor:zoom-out}
 .lupa{position:absolute;bottom:20px;right:20px;background:var(--bg);color:var(--ink);border:0;min-height:44px;padding:0 18px;border-radius:999px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.875rem;font-weight:500}
@@ -663,8 +667,10 @@ if(matchMedia('(display-mode: standalone)').matches){
 }
 
 /* ---------- Datos (contenido de ejemplo, editable) ---------- */
-const HILOS=[{n:'Tierra',c:'#A15A3C'},{n:'Caramelo',c:'#C1825F'},{n:'Arena',c:'#D9B99B'},{n:'Crudo',c:'#EDE2D6'},{n:'Café',c:'#5A3325'},{n:'Salvia',c:'#8E9677'}];
+const HILOS=[{n:'Tierra',c:'#A15A3C'},{n:'Caramelo',c:'#C1825F'},{n:'Arena',c:'#D9B99B'},{n:'Crudo',c:'#EDE2D6'},{n:'Café',c:'#5A3325'},{n:'Salvia',c:'#8E9677'},
+  {n:'Amarillo',c:'#E9A830'},{n:'Café claro',c:'#9C6B3E'},{n:'Café oscuro',c:'#4A2B1A'},{n:'Lila',c:'#C4A4D6'},{n:'Morado',c:'#5B3E96'},{n:'Turquesa',c:'#2E8F8A'},{n:'Blanco',c:'#FFFFFF'},{n:'Azul claro',c:'#6FA8D8'},{n:'Azul oscuro',c:'#1F3B73'},{n:'Terracota',c:'#C1512E'},{n:'Mostaza',c:'#D29A1E'}];
 const colorDe=n=>(HILOS.find(h=>h.n===n)||HILOS[0]).c;
+const coloresDe=p=>(p.colores?p.colores.map(n=>HILOS.find(h=>h.n===n)).filter(Boolean):HILOS.slice(0,5));
 const PRENDAS=[
   {id:'cardigan',cat:'abrigos',nombre:'Cárdigan Cafetal',precio:180000,color:'Tierra',tallas:['S','M','L'],etiqueta:'Más pedido',
    desc:'Cárdigan largo y abierto al frente, en punto alto con franjas en relieve.',
@@ -685,7 +691,19 @@ const PRENDAS=[
   {id:'top',cat:'tops',nombre:'Top Guayacán',precio:85000,color:'Crudo',tallas:['XS','S','M'],etiqueta:'Nuevo',
    desc:'Top corto de tiras, con flores tejidas en el pecho.',
    cuento:'Las flores del pecho vienen del guayacán amarillo, un árbol que florece de golpe y cubre la calle de pétalos por unos pocos días.',
-   escena:'guayacan',pie:'El guayacán en flor',horas:'Unas 9 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano y secar a la sombra.'}
+   escena:'guayacan',pie:'El guayacán en flor',horas:'Unas 9 horas de tejido a mano.',material:'Algodón mercerizado. Lavar a mano y secar a la sombra.'},
+  {id:'aretes-sunflower',cat:'accesorios',nombre:'Aretes Sunflower',precio:29990,color:'Amarillo',colores:['Amarillo','Café claro','Café oscuro'],tallas:['Única'],etiqueta:'Nuevo',
+   desc:'Aretes tejidos en forma de girasol, con gancho dorado.',
+   cuento:'Sus pétalos amarillos y el centro café nacen de los campos de girasoles del Valle del Cauca, que se abren de cara al sol en todo su esplendor.',
+   fotos:['assets/productos/aretes-sunflower-1.jpg'],horas:'Unas 2 horas de tejido a mano.',material:'Hilo de algodón. Limpiar con un paño seco, evitar el agua.'},
+  {id:'chaleco-orquidea',cat:'abrigos',nombre:'Chaleco Orquídea',precio:249990,color:'Morado',colores:['Lila','Morado','Turquesa','Blanco','Azul claro','Azul oscuro'],tallas:['S','M'],etiqueta:'Nuevo',
+   desc:'Chaleco tejido en cuadros, con los tonos de la orquídea colombiana.',
+   cuento:'Cada cuadro combina los morados, azules y turquesas de las orquídeas que crecen silvestres en los bosques de Colombia, la flor que lleva el nombre de nuestro país por el mundo.',
+   fotos:['assets/productos/chaleco-orquidea-1.jpg'],horas:'Unas 18 horas de tejido a mano.',material:'Lana acrílica. Lavar a mano en agua fría y secar extendido.'},
+  {id:'canguro-margarita',cat:'accesorios',nombre:'Canguro Margarita',precio:89990,color:'Terracota',colores:['Terracota','Mostaza','Blanco'],tallas:['Única'],etiqueta:'Nuevo',
+   desc:'Riñonera tejida con flores margarita, correa ajustable.',
+   cuento:'Sus flores blancas repiten las margaritas que crecen entre el pasto en cualquier parque, y su forma está pensada para llevar el celular, las llaves y los audífonos sin pensarlo dos veces.',
+   fotos:['assets/productos/canguro-margarita-1.jpg'],horas:'Unas 10 horas de tejido a mano.',material:'Algodón mercerizado. Limpiar con paño húmedo.'}
 ];
 
 /* ---------- Ilustraciones ---------- */
@@ -831,13 +849,13 @@ rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
     <button class="tarjeta-media" data-abrir="${i}" aria-label="Ver ${p.nombre}">
       ${p.etiqueta?`<span class="etiqueta">${p.etiqueta}</span>`:''}
       <span class="sombra"></span>
-      <span class="gira" id="g-${p.id}">${prendaSVG(p,colorDe(p.color))}</span>
+      <span class="gira" id="g-${p.id}">${p.fotos?`<img src="${p.fotos[0]}" alt="${p.nombre}" loading="lazy">`:prendaSVG(p,colorDe(p.color))}</span>
       <span class="vista" aria-hidden="true"><span>Ver prenda y su historia</span></span>
     </button>
     <div class="tarjeta-info"><h3>${p.nombre}</h3><span class="precio">${cop(p.precio)}</span></div>
     <p class="tarjeta-sub">${p.desc}</p>
     <div class="puntos" role="group" aria-label="Color de ${p.nombre}">
-      ${HILOS.slice(0,5).map(h=>`<button class="punto" data-p="${p.id}" data-n="${h.n}" aria-label="${h.n}" aria-pressed="${h.n===p.color}"><span style="background:${h.c}"></span></button>`).join('')}
+      ${coloresDe(p).map(h=>`<button class="punto" data-p="${p.id}" data-n="${h.n}" aria-label="${h.n}" aria-pressed="${h.n===p.color}"><span style="background:${h.c}"></span></button>`).join('')}
     </div>
   </article>`;}).join('')+`
   <article class="tarjeta revela" data-cat="todo-medida">
@@ -848,7 +866,7 @@ rejilla.innerHTML=PRENDAS.map((p,i)=>{colorTarjeta[p.id]=p.color;return `
 rejilla.addEventListener('click',e=>{
   const pt=e.target.closest('.punto');
   if(pt){ const p=PRENDAS.find(x=>x.id===pt.dataset.p); colorTarjeta[p.id]=pt.dataset.n;
-    $(`#g-${p.id} svg`).style.color=colorDe(pt.dataset.n);
+    const svg=$(`#g-${p.id} svg`); if(svg) svg.style.color=colorDe(pt.dataset.n);
     $$(`.punto[data-p="${p.id}"]`).forEach(b=>b.setAttribute('aria-pressed',b===pt)); return; }
   const ab=e.target.closest('[data-abrir]'); if(ab){ abrirProducto(+ab.dataset.abrir); }
 });
@@ -898,9 +916,8 @@ new IntersectionObserver(([e])=>{ $('.filtros-barra').classList.toggle('pegada',
 /* ---------- Ficha de producto ---------- */
 const dlgP=$('#producto'), pEsc=$('#p-escenario'), pGiro=$('#p-giro'), pPrenda=$('#p-prenda'), lupa=$('#p-lupa');
 let act=null, pColor=null, pTalla=null, pCant=1, cerca=false;
-$('#p-hebras').innerHTML=HILOS.map(h=>`<button class="hebra" data-n="${h.n}" aria-label="${h.n}" aria-pressed="false"><span style="background:${h.c}"></span></button>`).join('');
 function refrescarP(){
-  pPrenda.querySelector('svg').style.color=colorDe(pColor);
+  const svgP=pPrenda.querySelector('svg'); if(svgP) svgP.style.color=colorDe(pColor);
   $('#p-color').textContent=pColor; $('#p-talla-t').textContent=pTalla||'Elige una';
   $$('#p-hebras .hebra').forEach(b=>b.setAttribute('aria-pressed',b.dataset.n===pColor));
   $$('#p-tallas .talla').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===pTalla));
@@ -923,16 +940,24 @@ function restaurarBorrador(){
 }
 function abrirProducto(i){
   act=PRENDAS[i]; pColor=colorTarjeta[act.id]||act.color; pTalla=act.tallas.length===1?act.tallas[0]:null; pCant=1;
-  pPrenda.innerHTML=prendaSVG(act,colorDe(pColor));
+  pPrenda.innerHTML=act.fotos?`<img src="${act.fotos[0]}" alt="${act.nombre}">`:prendaSVG(act,colorDe(pColor));
+  $('#p-hebras').innerHTML=coloresDe(act).map(h=>`<button class="hebra" data-n="${h.n}" aria-label="${h.n}" aria-pressed="false"><span style="background:${h.c}"></span></button>`).join('');
   $('#p-nombre').textContent=act.nombre; $('#p-precio').textContent=cop(act.precio); $('#p-desc').textContent=act.desc;
-  $('#p-cuento').textContent=act.cuento; $('#p-media').innerHTML=escenaSVG(act.escena);
-  $('#p-pie').textContent='Inspiración: '+act.pie+'. Ilustración de muestra.';
+  $('#p-cuento').textContent=act.cuento;
+  const insp=$('#p-insp'); insp.classList.remove('visible');
+  if(act.escena){
+    insp.style.display='';
+    $('#p-media').innerHTML=escenaSVG(act.escena);
+    $('#p-pie').textContent='Inspiración: '+act.pie+'. Ilustración de muestra.';
+  } else {
+    insp.style.display='none';
+    $('#p-media').innerHTML=''; $('#p-pie').textContent='';
+  }
   $('#p-material').textContent=act.material; $('#p-horas').textContent=act.horas;
   $('#p-tallas').innerHTML=act.tallas.map(t=>`<button class="talla" data-t="${t}" aria-pressed="false">${t}</button>`).join('');
   setCerca(false); refrescarP();
-  const insp=$('#p-insp'); insp.classList.remove('visible');
   abrirDlg(dlgP); dlgP.scrollTop=0;
-  new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting){ insp.classList.add('visible'); o.disconnect(); } },{root:dlgP,threshold:.35}).observe(insp);
+  if(act.escena) new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting){ insp.classList.add('visible'); o.disconnect(); } },{root:dlgP,threshold:.35}).observe(insp);
 }
 $('#p-hebras').addEventListener('click',e=>{const b=e.target.closest('.hebra'); if(b){pColor=b.dataset.n; refrescarP();}});
 $('#p-tallas').addEventListener('click',e=>{const b=e.target.closest('.talla'); if(b){pTalla=b.dataset.t; refrescarP();}});
@@ -956,8 +981,8 @@ pEsc.addEventListener('pointerleave',()=>{ if(!cerca) pGiro.style.transform=''; 
 
 /* ---------- Historias con scroll ---------- */
 const hist=$('#historias'); hist.style.setProperty('--n',PRENDAS.length);
-$('#escenas').innerHTML=PRENDAS.map((p,i)=>`<div class="escena" data-i="${i}">${escenaSVG(p.escena)}</div>`).join('');
-$('#flota').innerHTML=PRENDAS.map((p,i)=>`<div class="fp" data-i="${i}">${prendaSVG(p,colorDe(p.color))}</div>`).join('');
+$('#escenas').innerHTML=PRENDAS.map((p,i)=>`<div class="escena" data-i="${i}">${p.escena?escenaSVG(p.escena):''}</div>`).join('');
+$('#flota').innerHTML=PRENDAS.map((p,i)=>`<div class="fp" data-i="${i}">${p.fotos?`<img src="${p.fotos[0]}" alt="${p.nombre}">`:prendaSVG(p,colorDe(p.color))}</div>`).join('');
 $('#relato').innerHTML=PRENDAS.map((p,i)=>`
   <article class="panel" data-i="${i}" aria-hidden="true">
     <span class="guion">¿Sabías que…?</span>
