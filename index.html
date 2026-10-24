@@ -179,7 +179,7 @@ button{font:inherit;color:inherit}
 @media (max-width:620px){.rejilla{grid-template-columns:1fr}.medida{aspect-ratio:auto}}
 
 /* Historias (scroll narrativo) */
-.historias{position:relative;height:calc(var(--n,5) * 100svh);background:var(--bg-2)}
+.historias{position:relative;height:calc(var(--n,5) * 78svh);background:var(--bg-2)}
 .historias-fijo{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdr));height:calc(100svh - var(--hdr));display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,4vw,64px);align-items:center;padding-top:28px;padding-bottom:28px}
 .escenario{position:relative;height:100%;max-height:760px;border-radius:28px;overflow:hidden;background:var(--card);perspective:1000px}
 .escena{position:absolute;inset:0;opacity:0;transform:scale(1.06);transition:opacity 1s var(--ease),transform 1.6s var(--ease)}
@@ -201,10 +201,16 @@ button{font:inherit;color:inherit}
 .panel h3{font-size:clamp(2.4rem,4.4vw,4rem);font-weight:200;margin-top:14px}
 .panel p{margin-top:20px;font-size:1.125rem;color:var(--ink-2);max-width:40ch}
 .panel .acciones{margin-top:30px}
-.progreso{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:28px;max-width:420px}
-.progreso::before,.progreso .relleno{content:"";position:absolute;left:22px;right:22px;top:50%;height:1.5px;background:var(--line)}
-.progreso .relleno{background:var(--accent);right:auto;width:0;transition:width .2s linear}
-.nudo{position:relative;z-index:1;width:44px;height:44px;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.progreso-barra{display:flex;align-items:center;gap:12px;margin-top:28px;max-width:420px}
+.progreso-barra .pista{position:relative;flex:1;height:3px;border-radius:999px;background:var(--line);overflow:hidden}
+.progreso-barra .relleno{position:absolute;inset:0;width:0;background:var(--accent);border-radius:inherit;transition:width .2s linear}
+.progreso-barra .cuenta{flex:none;font-size:.8125rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.progreso{position:relative;display:flex;align-items:center;gap:2px;margin-top:10px;max-width:420px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth}
+.progreso::-webkit-scrollbar{display:none}
+.nudo{position:relative;z-index:1;flex:none;width:28px;height:44px;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.saltar-historias{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:.8125rem;color:var(--ink-2);text-decoration:none}
+.saltar-historias:hover{color:var(--accent)}
+.saltar-historias svg{width:14px;height:14px}
 .nudo span{width:12px;height:12px;border-radius:50%;background:var(--bg-2);border:1.5px solid var(--ink-2);transition:transform .4s var(--ease),background .3s,border-color .3s}
 .nudo.hecho span{background:var(--accent);border-color:var(--accent)}
 .nudo[aria-current="true"] span{transform:scale(1.5)}
@@ -521,7 +527,9 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
       </div>
       <div>
         <div class="relato" id="relato"></div>
-        <div class="progreso" id="progreso"><span class="relleno" id="relleno"></span></div>
+        <div class="progreso-barra"><span class="pista"><span class="relleno" id="relleno"></span></span><span class="cuenta" id="cuenta"></span></div>
+        <div class="progreso" id="progreso"></div>
+        <a class="saltar-historias" href="#proceso">Saltar las historias<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
       </div>
     </div>
   </section>
@@ -1127,12 +1135,14 @@ function historia(){
   const r=hist.getBoundingClientRect(), total=hist.offsetHeight-innerHeight;
   const prog=Math.min(1,Math.max(0,-r.top/Math.max(1,total)));
   const i=Math.min(PRENDAS.length-1,Math.floor(prog*PRENDAS.length));
-  $('#relleno').style.width=`calc((100% - 44px) * ${prog})`;
+  $('#relleno').style.width=`${prog*100}%`;
+  $('#cuenta').textContent=`${i+1} / ${PRENDAS.length}`;
   if(i===hActual) return; hActual=i;
   $$('.escena').forEach(el=>el.classList.toggle('activa',+el.dataset.i===i));
   $$('.fp').forEach(el=>el.classList.toggle('activa',+el.dataset.i===i));
   $$('.panel').forEach(el=>{const on=+el.dataset.i===i; el.classList.toggle('activo',on); el.setAttribute('aria-hidden',!on); el.querySelector('button').tabIndex=on?0:-1;});
   $$('.nudo').forEach(el=>{const k=+el.dataset.i; el.classList.toggle('hecho',k<=i); el.setAttribute('aria-current',k===i);});
+  const activo=$('.nudo[aria-current="true"]'); if(activo) activo.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
   $('#leyenda').textContent=PRENDAS[i].pie||'';
   $('#leyenda').classList.toggle('oculta',!PRENDAS[i].pie);
 }
