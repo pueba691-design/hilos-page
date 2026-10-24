@@ -9,7 +9,7 @@ Estado actual (2026-10-24): **30 de ~40 prendas, todas reales, con foto propia.*
 ```js
 {
   id:'canguro-margarita',          // único, sin espacios — se usa en el DOM, localStorage, filtros
-  cat:'accesorios',                 // 'abrigos' | 'accesorios' | 'tops' — debe coincidir con los chips de categoría
+  cat:'bolsos',                     // 'abrigos' | 'tops' | 'aretes' | 'cabello' | 'bolsos' — debe coincidir con los chips de categoría (ver nota abajo)
   nombre:'Canguro Margarita',
   precio:89990,                     // en pesos, sin decimales
   color:'Terracota',                // color que se ve por defecto en la tarjeta — debe estar en `colores` (si lo hay) y existir en HILOS
@@ -26,11 +26,25 @@ Estado actual (2026-10-24): **30 de ~40 prendas, todas reales, con foto propia.*
 }
 ```
 
+## Categorías (`cat`)
+
+Los chips de categoría son fijos en el HTML (no se generan desde `PRENDAS` como los de talla), así que agregar una categoría nueva significa tocar dos lugares: el chip en el HTML (`<button class="chip" data-f="...">`) y el `cat` de las prendas que correspondan. Las 5 actuales (2026-10-24), con cuántas prendas tiene cada una:
+
+- `abrigos` (2) — prendas tejidas de cuerpo completo, más abrigadas (chalecos, suéteres)
+- `tops` (4) — prendas cortas de tiras/crop
+- `aretes` (6)
+- `cabello` (10) — balacas, diademas, pinzas, ganchos, gorro, pañoleta — todo lo que se usa en o sobre el cabello
+- `bolsos` (8) — riñoneras, bolso, llaveros, correa de celular, porta termo, y cosas similares para cargar
+
+Antes había solo 3 categorías (`abrigos`/`accesorios`/`tops`) y `accesorios` terminó con 24 de las 30 prendas — un cajón de sastre que no servía para filtrar nada. Si el catálogo sigue creciendo y una categoría se vuelve demasiado grande o aparece un tipo de producto que no encaja bien en ninguna, vale la pena repetir este ejercicio (contar cuántas prendas caen en cada una) antes de simplemente meterlo en la más parecida.
+
 ## Colores: el campo `colores` es por prenda, no global
 
 `HILOS` (justo antes de `PRENDAS`) es la paleta completa del sitio: `{n:'Tierra', c:'#A15A3C'}`. Pero **cada prenda solo viene en algunos de esos colores** — por eso existe `colores: [...]` en el objeto de la prenda, con los nombres exactos (deben existir en `HILOS`) de las variantes que esa prenda realmente tiene. La función `coloresDe(p)` es la que filtra: si la prenda no trae `colores`, cae de vuelta a los primeros 5 de `HILOS` (así siguen funcionando las 5 prendas de ejemplo sin tocarlas).
 
-**Esto se usa en dos lugares — y hay que mantenerlos sincronizados a mano**: los puntos de color de la tarjeta (`.puntos`) y las hebras de la ficha (`#p-hebras`) ambos llaman a `coloresDe(act)`/`coloresDe(p)`, así que basta con definir `colores` una vez por prenda.
+Los colores **solo se eligen en la ficha de producto** (`#p-hebras`) — la tarjeta de la colección ya no los repite (se quitaron el 2026-10-24: eran redundantes con la ficha, y como las tarjetas muestran fotos reales, hacer clic en un color ahí tampoco cambiaba nada visualmente). Si se vuelve a mostrar algo de color en la tarjeta en el futuro, usar `coloresDe(p)` igual que hace la ficha, no inventar una lista aparte.
+
+Cuando el color elegido en la ficha no es el que aparece en la foto, `#p-nota-color` lo aclara automáticamente (ver `abrirProducto`/`refrescarP` en `index.html`) — no hace falta escribir esa aclaración a mano en `cuento` ni `desc`.
 
 Si una prenda necesita un color que no existe todavía en `HILOS`, agrégalo ahí primero (con su `n` y su `c` en hex) antes de referenciarlo en `colores`.
 
