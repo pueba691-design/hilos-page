@@ -25,7 +25,7 @@ Casi todo el script está dentro de un único `(function(){ 'use strict'; ... })
 | Sección (comentario en el código) | Qué hace |
 |---|---|
 | `Datos (contenido de ejemplo, editable)` | El arreglo `PRENDAS` — ver [`catalogo.md`](catalogo.md) |
-| `Ilustraciones` | Genera los SVG de muestra de cada prenda (`prendaSVG`) — se reemplaza por fotos reales cuando lleguen |
+| `Ilustraciones` | Genera los SVG de muestra (`prendaSVG`, `escenaSVG`) — hoy solo las 5 prendas de ejemplo originales los usan; las prendas reales traen `fotos` y usan `<img>` en su lugar (ver [`catalogo.md`](catalogo.md)) |
 | `Cinta` | La cinta animada de frases que se repite arriba de la colección |
 | `Bolsa` | Carrito en `localStorage` (`hilos-bolsa`) y armado del mensaje de WhatsApp |
 | `Colección` | Pinta las tarjetas, y los filtros por categoría + talla (sticky bar) |
@@ -47,3 +47,11 @@ Es una malla generada por código (no un modelo `.glb`), tejida a partir de cien
 ## Colección: cómo funcionan los filtros
 
 Los chips de categoría son fijos en el HTML (Todo/Abrigos/Accesorios/Tops). Los chips de **talla** se generan en JS a partir de `PRENDAS` (`[...new Set(PRENDAS.flatMap(p=>p.tallas))]`), así que **no hay que tocar código** al agregar prendas con tallas nuevas — aparecen solas. Los dos filtros se combinan con AND (`aplicarFiltros()`). La barra completa (`.filtros-barra`) es `position:sticky` bajo el header.
+
+Los colores de cada tarjeta (`.puntos`) también se generan por prenda con `coloresDe(p)`, que filtra el arreglo global `HILOS` según el campo `colores` de esa prenda (o cae a los primeros 5 si no lo tiene) — ver [`catalogo.md`](catalogo.md#colores-el-campo-colores-es-por-prenda-no-global).
+
+## Galería de fotos (tarjeta y ficha)
+
+Cuando una prenda trae `fotos: [...]` con más de una imagen, tanto la tarjeta (`.galeria-puntos`) como la ficha (`#p-galeria`) muestran puntos de navegación tipo carrusel para pasar entre ellas — sin afectar a las prendas que solo tienen una foto o ninguna. Los clics se manejan por delegación (`rejilla.addEventListener('click', ...)` para las tarjetas, un listener propio en `#p-galeria` para la ficha); solo cambian el `src` de la `<img>` activa, no reconstruyen nada.
+
+**Detalle importante si se vuelve a tocar esto**: `.tarjeta-media` (la tarjeta clicable que abre la ficha) es un `<div role="button" tabindex="0">`, **no** un `<button>` nativo — se cambió a propósito porque ahora contiene los botones reales de los puntos de galería, y un `<button>` no puede contener otro `<button>` (HTML inválido, el navegador reordena el DOM de forma impredecible si se intenta). Por eso hay un listener de `keydown` aparte en `rejilla` que simula la activación por Enter/Espacio que un `<button>` daría gratis.
