@@ -333,9 +333,9 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 }
 
 /* Bolsa */
-.bolsa-dlg{margin:0 0 0 auto;width:100%;height:100dvh;max-height:100dvh;border-radius:0;display:none;flex-direction:column}
+.bolsa-dlg{position:fixed;inset:0;width:auto;margin:0;height:100dvh;max-height:100dvh;border-radius:0;display:none;flex-direction:column}
 .bolsa-dlg[open]{display:flex;animation:entrar .5s var(--ease)}
-@media (min-width:600px){.bolsa-dlg{width:460px}}
+@media (min-width:600px){.bolsa-dlg{left:auto;width:460px}}
 @keyframes entrar{from{transform:translateX(100%)}}
 .b-cabeza{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 20px) 24px 20px;border-bottom:1px solid var(--line)}
 .b-cabeza h2{font-size:1.8rem;font-weight:300;color:var(--ink)}
