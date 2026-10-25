@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>if('scrollRestoration' in history) history.scrollRestoration='manual';</script>
 <title>Hilos | Tejidos en crochet hechos a mano</title>
 <meta name="description" content="Prendas tejidas a mano en crochet, bajo pedido. Cada una guarda la historia del lugar que la inspiró.">
 <meta name="theme-color" content="#FFFFFF">
@@ -1178,7 +1179,8 @@ function historia(){
   $$('.fp').forEach(el=>el.classList.toggle('activa',+el.dataset.i===i));
   $$('.panel').forEach(el=>{const on=+el.dataset.i===i; el.classList.toggle('activo',on); el.setAttribute('aria-hidden',!on); el.querySelector('button').tabIndex=on?0:-1;});
   $$('.nudo').forEach(el=>{const k=+el.dataset.i; el.classList.toggle('hecho',k<=i); el.setAttribute('aria-current',k===i);});
-  const activo=$('.nudo[aria-current="true"]'); if(activo) activo.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  const activo=$('.nudo[aria-current="true"]');
+  if(activo){ const cont=$('#progreso'); cont.scrollTo({left:activo.offsetLeft-(cont.clientWidth-activo.clientWidth)/2,behavior:'smooth'}); }
   $('#leyenda').textContent=PRENDAS[i].pie||'';
   $('#leyenda').classList.toggle('oculta',!PRENDAS[i].pie);
 }
