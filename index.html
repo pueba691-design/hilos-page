@@ -358,9 +358,9 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 .b-nota{font-size:.8125rem;color:var(--ink-2);margin-bottom:16px}
 
 /* Aviso flotante */
-.tostada{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:80;transform:translate(-50%,calc(100% + 60px));visibility:hidden;background:#000;color:#C1825F;border-radius:999px;padding:8px 8px 8px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 18px 40px rgba(0,0,0,.25);transition:transform .5s var(--ease);font-size:.9375rem;max-width:calc(100% - 32px)}
+.tostada{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:80;transform:translate(-50%,calc(100% + 60px));visibility:hidden;background:#000;color:#C1825F;border-radius:20px;padding:14px 14px 14px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 18px 40px rgba(0,0,0,.25);transition:transform .5s var(--ease);font-size:.9375rem;width:min(420px,calc(100% - 32px))}
 .tostada.ver{transform:translate(-50%,0);visibility:visible}
-.tostada button{min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(193,130,95,.5);background:none;color:#C1825F;cursor:pointer;font-weight:600;white-space:nowrap}
+.tostada button{flex:none;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(193,130,95,.5);background:none;color:#C1825F;cursor:pointer;font-weight:600;white-space:nowrap}
 
 .pwa-aviso{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:75;transform:translate(-50%,calc(100% + 90px));visibility:hidden;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;grid-template-columns:36px 1fr;grid-template-areas:"img texto" "acciones acciones";column-gap:12px;row-gap:14px;box-shadow:0 18px 40px rgba(0,0,0,.18);transition:transform .5s var(--ease);font-size:.8125rem;width:min(360px,calc(100% - 32px))}
 .pwa-aviso.ver{transform:translate(-50%,0);visibility:visible}
