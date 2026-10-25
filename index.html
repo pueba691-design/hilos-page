@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600&family=Hanken+Grotesk:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400&family=Hanken+Grotesk:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
 <style>
 :root{
   --blanco:#FFFFFF; --crudo:#FAF5F2; --lino:#F3EBE4; --arena:#E7D8CB; --caramelo:#C1825F; --tierra:#A15A3C; --cafe:#7A4430; --negro:#000000;
@@ -1151,7 +1151,7 @@ pEsc.addEventListener('pointerleave',()=>{ if(!cerca) pGiro.style.transform=''; 
 /* ---------- Historias con scroll ---------- */
 const hist=$('#historias'); hist.style.setProperty('--n',PRENDAS.length);
 $('#escenas').innerHTML=PRENDAS.map((p,i)=>`<div class="escena" data-i="${i}">${p.fotos?`<img src="${p.fotos[0]}" alt="" loading="lazy">`:(p.escena?escenaSVG(p.escena):'')}</div>`).join('');
-$('#flota').innerHTML=PRENDAS.map((p,i)=>`<div class="fp" data-i="${i}">${p.fotos?`<img src="${p.fotos[0]}" alt="${p.nombre}">`:prendaSVG(p,colorDe(p.color))}</div>`).join('');
+$('#flota').innerHTML=PRENDAS.map((p,i)=>`<div class="fp" data-i="${i}">${p.fotos?`<img src="${p.fotos[0]}" alt="${p.nombre}" loading="lazy">`:prendaSVG(p,colorDe(p.color))}</div>`).join('');
 $('#relato').innerHTML=PRENDAS.map((p,i)=>`
   <article class="panel" data-i="${i}" aria-hidden="true">
     <span class="guion">¿Sabías que…?</span>
