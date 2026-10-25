@@ -333,7 +333,7 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 }
 
 /* Bolsa */
-.bolsa-dlg{position:fixed;inset:0;width:auto;margin:0;height:100dvh;max-height:100dvh;border-radius:0;display:none;flex-direction:column}
+.bolsa-dlg{position:fixed;inset:0;width:auto;max-width:none;margin:0;height:100dvh;max-height:100dvh;border-radius:0;display:none;flex-direction:column}
 .bolsa-dlg[open]{display:flex;animation:entrar .5s var(--ease)}
 @media (min-width:600px){.bolsa-dlg{left:auto;width:460px}}
 @keyframes entrar{from{transform:translateX(100%)}}
