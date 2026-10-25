@@ -213,6 +213,7 @@ button{font:inherit;color:inherit}
 @media (max-width:900px){
   .historias-fijo{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:18px;padding-top:12px;padding-bottom:16px}
   .escenario{max-height:none}
+  .historias-fijo>*{min-width:0}
   .relato{height:250px}
   .panel .guion{font-size:1.7rem}
   .panel h3{font-size:2.1rem;margin-top:6px}
@@ -326,8 +327,8 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 .p-info .acordeon summary{font-size:1.15rem;min-height:56px}
 @media (max-width:860px){
   .p-grid{grid-template-columns:1fr}
-  .p-escenario{position:relative;height:auto;aspect-ratio:1/1;max-height:62dvh}
-  .p-giro{width:min(78%,340px)}
+  .p-escenario{position:relative;height:auto;aspect-ratio:4/5;max-height:68dvh;padding:16px}
+  .p-giro{width:100%;height:100%;aspect-ratio:auto}
   .p-info{padding-top:32px}
 }
 
