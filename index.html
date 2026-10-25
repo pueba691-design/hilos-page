@@ -333,8 +333,9 @@ dialog::backdrop{background:rgba(20,12,8,.5);backdrop-filter:blur(6px);-webkit-b
 }
 
 /* Bolsa */
-.bolsa-dlg{margin:0 0 0 auto;width:min(460px,100%);height:100dvh;max-height:100dvh;border-radius:0;display:none;flex-direction:column}
+.bolsa-dlg{margin:0 0 0 auto;width:100%;height:100dvh;max-height:100dvh;border-radius:0;display:none;flex-direction:column}
 .bolsa-dlg[open]{display:flex;animation:entrar .5s var(--ease)}
+@media (min-width:600px){.bolsa-dlg{width:460px}}
 @keyframes entrar{from{transform:translateX(100%)}}
 .b-cabeza{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 20px) 24px 20px;border-bottom:1px solid var(--line)}
 .b-cabeza h2{font-size:1.8rem;font-weight:300;color:var(--ink)}
@@ -952,6 +953,29 @@ let tTost;
 function tostada(txt){ $('#tostada-txt').textContent=txt; const t=$('#tostada'); t.classList.add('ver'); clearTimeout(tTost); tTost=setTimeout(()=>t.classList.remove('ver'),3600); }
 $('#tostada-ver').addEventListener('click',()=>{ $('#tostada').classList.remove('ver'); abrirDlg($('#bolsa')); });
 
+/* Deslizar con el dedo para cambiar de foto (tarjetas y ficha) */
+function escucharDeslizar(el,obtenerActivo,onCambiar){
+  let x0=null,y0=null,obj=null;
+  el.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1) return;
+    obj=obtenerActivo(e);
+    if(!obj){ x0=null; return; }
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  },{passive:true});
+  el.addEventListener('touchmove',e=>{
+    if(x0===null) return;
+    const dx=e.touches[0].clientX-x0, dy=e.touches[0].clientY-y0;
+    if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)) e.preventDefault();
+  },{passive:false});
+  el.addEventListener('touchend',e=>{
+    if(x0===null||!obj) return;
+    const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
+    x0=null;
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){ e.preventDefault(); onCambiar(obj,dx<0?1:-1); }
+    obj=null;
+  },{passive:false});
+}
+
 /* ---------- Colección ---------- */
 const rejilla=$('#rejilla');
 rejilla.innerHTML=PRENDAS.map((p,i)=>{return `
@@ -971,13 +995,25 @@ rejilla.innerHTML=PRENDAS.map((p,i)=>{return `
     <p>Elige la prenda, el hilo y el color. La tejemos con tus medidas.</p>
     <a class="btn" href="#encargo">Encargar a medida</a></div>
   </article>`;
+function cambiarFotoTarjeta(p,i){
+  const img=$(`#g-${p.id} img`); if(!img) return;
+  img.src=p.fotos[i];
+  $$(`.gp[data-p="${p.id}"]`).forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i));
+}
 rejilla.addEventListener('click',e=>{
   const gp=e.target.closest('.gp');
-  if(gp){ const p=PRENDAS.find(x=>x.id===gp.dataset.p), i=+gp.dataset.i;
-    $(`#g-${p.id} img`).src=p.fotos[i];
-    $$(`.gp[data-p="${p.id}"]`).forEach(b=>b.setAttribute('aria-pressed',b===gp)); return; }
+  if(gp){ cambiarFotoTarjeta(PRENDAS.find(x=>x.id===gp.dataset.p),+gp.dataset.i); return; }
   const ab=e.target.closest('[data-abrir]'); if(ab){ abrirProducto(+ab.dataset.abrir); }
 });
+escucharDeslizar(rejilla,
+  e=>{ const m=e.target.closest('.tarjeta-media'); if(!m) return null;
+    const p=PRENDAS[+m.dataset.abrir]; if(!p.fotos||p.fotos.length<2) return null;
+    return {p,m}; },
+  ({p,m},dir)=>{
+    const activo=m.querySelector('.gp[aria-pressed="true"]');
+    const i=Math.min(p.fotos.length-1,Math.max(0,+(activo?.dataset.i||0)+dir));
+    cambiarFotoTarjeta(p,i);
+  });
 rejilla.addEventListener('keydown',e=>{
   if(e.key!=='Enter'&&e.key!==' ') return;
   const ab=e.target.closest('[data-abrir]'); if(!ab||e.target.closest('.gp')) return;
@@ -1089,12 +1125,21 @@ dlgP.addEventListener('close',borrarBorrador);
 restaurarBorrador();
 function setCerca(v){cerca=v; pEsc.classList.toggle('cerca',v); lupa.setAttribute('aria-pressed',v); lupa.querySelector('span').textContent=v?'Ver completa':'Ver los puntos'; pGiro.style.transform=''; pPrenda.style.transformOrigin='50% 50%';}
 lupa.addEventListener('click',()=>setCerca(!cerca));
-$('#p-galeria').addEventListener('click',e=>{
-  const b=e.target.closest('.gp'); if(!b) return;
-  const i=+b.dataset.i;
+function cambiarFotoP(i){
   pPrenda.querySelector('img').src=act.fotos[i];
-  $$('#p-galeria .gp').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $$('#p-galeria .gp').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.i===i));
+}
+$('#p-galeria').addEventListener('click',e=>{
+  const b=e.target.closest('.gp'); if(b) cambiarFotoP(+b.dataset.i);
 });
+escucharDeslizar(pEsc,
+  ()=>(act&&act.fotos&&act.fotos.length>1)?true:null,
+  (_,dir)=>{
+    const activo=$('#p-galeria .gp[aria-pressed="true"]');
+    const i=Math.min(act.fotos.length-1,Math.max(0,+(activo?.dataset.i||0)+dir));
+    cambiarFotoP(i);
+  });
+pEsc.addEventListener('touchend',()=>{ if(!cerca) pGiro.style.transform=''; });
 pPrenda.addEventListener('click',()=>{ if(cerca) setCerca(false); });
 pEsc.addEventListener('pointermove',e=>{
   const b=pEsc.getBoundingClientRect(), x=(e.clientX-b.left)/b.width, y=(e.clientY-b.top)/b.height;
