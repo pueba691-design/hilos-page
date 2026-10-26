@@ -46,13 +46,15 @@ Es una malla generada por código (no un modelo `.glb`), tejida a partir de cien
 
 ## Colección: cómo funcionan los filtros
 
-Los chips de categoría son fijos en el HTML (Todo/Abrigos/Accesorios/Tops). Los chips de **talla** se generan en JS a partir de `PRENDAS` (`[...new Set(PRENDAS.flatMap(p=>p.tallas))]`), así que **no hay que tocar código** al agregar prendas con tallas nuevas — aparecen solas. Los dos filtros se combinan con AND (`aplicarFiltros()`). La barra completa (`.filtros-barra`) es `position:sticky` bajo el header.
+Los chips de categoría son fijos en el HTML (Todo/Abrigos/Tops/Aretes/Para el cabello/Bolsos — 5 categorías reales, ver [`catalogo.md`](catalogo.md)). Los chips de **talla** se generan en JS a partir de `PRENDAS` (`[...new Set(PRENDAS.flatMap(p=>p.tallas))]`), así que **no hay que tocar código** al agregar prendas con tallas nuevas — aparecen solas. Los dos filtros se combinan con AND (`aplicarFiltros()`). La barra completa (`.filtros-barra`) es `position:sticky` bajo el header.
 
-Los colores de cada tarjeta (`.puntos`) también se generan por prenda con `coloresDe(p)`, que filtra el arreglo global `HILOS` según el campo `colores` de esa prenda (o cae a los primeros 5 si no lo tiene) — ver [`catalogo.md`](catalogo.md#colores-el-campo-colores-es-por-prenda-no-global).
+Las tarjetas ya **no** muestran puntos de color (`.puntos`) — se quitaron por ser redundantes con el selector de color de la ficha. Los colores por prenda (`coloresDe(p)`, que filtra el arreglo global `HILOS` según el campo `colores` de esa prenda, o cae a los primeros 5 si no lo tiene) solo se usan hoy dentro de la ficha de producto — ver [`catalogo.md`](catalogo.md#colores-el-campo-colores-es-por-prenda-no-global).
 
 ## Galería de fotos (tarjeta y ficha)
 
 Cuando una prenda trae `fotos: [...]` con más de una imagen, tanto la tarjeta (`.galeria-puntos`) como la ficha (`#p-galeria`) muestran puntos de navegación tipo carrusel para pasar entre ellas — sin afectar a las prendas que solo tienen una foto o ninguna. Los clics se manejan por delegación (`rejilla.addEventListener('click', ...)` para las tarjetas, un listener propio en `#p-galeria` para la ficha); solo cambian el `src` de la `<img>` activa, no reconstruyen nada.
+
+En mobile también se puede **deslizar con el dedo** para cambiar de foto (tarjeta y ficha), vía el helper compartido `escucharDeslizar(el, obtenerActivo, onCambiar)` (eventos touch, umbral horizontal de 40px, hace `preventDefault` en el swipe detectado para que no dispare además el clic que abriría la ficha). Tanto los puntos como el swipe llaman a las mismas funciones (`cambiarFotoTarjeta`/`cambiarFotoP`), así que no hay lógica duplicada entre los dos métodos de navegación.
 
 **Detalle importante si se vuelve a tocar esto**: `.tarjeta-media` (la tarjeta clicable que abre la ficha) es un `<div role="button" tabindex="0">`, **no** un `<button>` nativo — se cambió a propósito porque ahora contiene los botones reales de los puntos de galería, y un `<button>` no puede contener otro `<button>` (HTML inválido, el navegador reordena el DOM de forma impredecible si se intenta). Por eso hay un listener de `keydown` aparte en `rejilla` que simula la activación por Enter/Espacio que un `<button>` daría gratis.
 
